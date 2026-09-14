@@ -91,13 +91,13 @@ const vista = disposicion
             width={grupo.ancho}
             height="7"
           />
-          <text class="mapa__antetitulo" x={grupo.textoX} y={grupo.titulo[0]}>
+          <text class="mapa__antetitulo" x={grupo.textoX} y={grupo.antetitulo}>
             Región
           </text>
-          <text class="mapa__titulo" x={grupo.textoX} y={grupo.titulo[1]}>
+          <text class="mapa__titulo" x={grupo.textoX} y={grupo.titulo}>
             {grupo.region}
           </text>
-          <text class="mapa__conteo" x={grupo.textoX} y={grupo.subtitulo}>
+          <text class="mapa__conteo" x={grupo.textoX} y={grupo.conteo}>
             {`${grupo.total} organizaciones`}
           </text>
         </g>
@@ -118,17 +118,21 @@ const vista = disposicion
             <circle class="mapa__halo" cx={nodo.x} cy={nodo.y} r="9" />
             <circle class="mapa__punto" cx={nodo.x} cy={nodo.y} r="4.2" />
             {nodo.etiqueta && (
-              <text
-                class="mapa__rotulo"
-                x={nodo.etiqueta.x}
-                y={nodo.etiqueta.y}
-              >
-                {nodo.comuna}
+              <text class="mapa__rotulo">
+                {nodo.etiqueta.lineas.map((linea) => (
+                  <tspan x={linea.x} y={linea.y}>
+                    {linea.texto}
+                  </tspan>
+                ))}
               </text>
             )}
             {nodo.entrada && (
-              <text class="mapa__item" x={nodo.entrada.x} y={nodo.entrada.y}>
-                {nodo.comuna}
+              <text class="mapa__item">
+                {nodo.entrada.lineas.map((linea) => (
+                  <tspan x={linea.x} y={linea.y}>
+                    {linea.texto}
+                  </tspan>
+                ))}
               </text>
             )}
             <title>{`${nodo.organizacion} — ${nodo.comuna}, ${nodo.region}`}</title>
@@ -207,13 +211,13 @@ const vista = disposicion
   }
 
   .mapa__rotulo {
-    font-size: 19px;
+    font-size: 26px;
     font-weight: 600;
     dominant-baseline: middle;
   }
 
   .mapa__item {
-    font-size: 17px;
+    font-size: 26px;
   }
 
   .mapa__sombra {
@@ -234,7 +238,7 @@ const vista = disposicion
 
   .mapa__antetitulo {
     font-family: var(--texto);
-    font-size: 11px;
+    font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -243,14 +247,14 @@ const vista = disposicion
 
   .mapa__titulo {
     font-family: var(--display);
-    font-size: 16px;
+    font-size: 27px;
     text-transform: uppercase;
     fill: var(--tinta);
   }
 
   .mapa__conteo {
     font-family: var(--texto);
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 600;
     fill: var(--tinta);
   }
