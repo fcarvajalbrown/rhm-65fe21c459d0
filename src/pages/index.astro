@@ -8,7 +8,7 @@ import { proximas } from "../lib/agenda.js";
 import { url } from "../lib/rutas.js";
 
 const regiones = [...new Set(miembros.map((m) => m.region))];
-const COWORKS = 6;
+const COWORKS = 4;
 
 const cifras = [
   { valor: miembros.length, texto: "Organizaciones miembro", color: "var(--magenta)" },
@@ -197,10 +197,9 @@ const pasos = [
         <p class="rotulo">Espacios</p>
         <h2>Coworks abiertos a la comunidad</h2>
         <p class="bajada">
-          La Red pone a disposición {COWORKS} coworks para trabajar, colaborar y desarrollar
-          proyectos: puestos de acceso abierto, salas de reuniones, laboratorios y capacitaciones.
-          El material de difusión de la Red mapea los de Providencia, Independencia, Lo Barnechea y
-          La Florida.
+          La Red pone a disposición cuatro coworks para trabajar, colaborar y desarrollar proyectos:
+          puestos de acceso abierto, salas de reuniones, laboratorios y capacitaciones. Están en
+          Providencia, Independencia, Lo Barnechea y La Florida.
         </p>
       </div>
       <figure class="coworks__figura">
