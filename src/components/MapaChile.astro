@@ -1,8 +1,9 @@
 ---
 import mapa from "../data/mapa.json";
 import miembros from "../data/miembros.json";
+import { disponerEtiquetas } from "../lib/etiquetas.js";
 
-const { interactivo = false } = Astro.props;
+const { interactivo = false, etiquetas = false } = Astro.props;
 
 const colorMacrozona = {
   Norte: "var(--naranja)",
@@ -13,7 +14,7 @@ const colorMacrozona = {
 };
 
 const porId = new Map(miembros.map((m) => [m.id, m]));
-const nodos = mapa.nodos.map((nodo, indice) => {
+const base = mapa.nodos.map((nodo, indice) => {
   const miembro = porId.get(nodo.id);
   return {
     ...nodo,
@@ -25,17 +26,83 @@ const nodos = mapa.nodos.map((nodo, indice) => {
     color: colorMacrozona[miembro.macrozona],
   };
 });
+
+const disposicion = etiquetas
+  ? disponerEtiquetas(base, mapa.width, mapa.height)
+  : null;
+
+const nodos = base.map((nodo) => ({
+  ...nodo,
+  etiqueta: disposicion ? disposicion.individuales.get(nodo.id) : null,
+  entrada: disposicion ? disposicion.entradas.get(nodo.id) : null,
+}));
+
+const grupo = disposicion ? disposicion.grupo : null;
+
+const vista = disposicion
+  ? disposicion.vista
+  : `-14 -14 ${mapa.width + 28} ${mapa.height + 28}`;
 ---
 
-<figure class:list={["mapa", { "mapa--interactivo": interactivo }]}>
+<figure
+  class:list={[
+    "mapa",
+    { "mapa--interactivo": interactivo, "mapa--rotulada": etiquetas },
+  ]}
+>
   <svg
-    viewBox={`-14 -14 ${mapa.width + 28} ${mapa.height + 28}`}
+    viewBox={vista}
     role="img"
     aria-label={`Mapa de Chile con ${nodos.length} organizaciones de la Red`}
   >
     <g class="mapa__tierra">
       {mapa.paths.map((d) => <path d={d} />)}
     </g>
+    {
+      grupo && (
+        <g class="mapa__grupo">
+          <rect
+            class="mapa__abrazadera"
+            x={grupo.abrazadera.x}
+            y={grupo.abrazadera.y}
+            width={grupo.abrazadera.ancho}
+            height={grupo.abrazadera.alto}
+            rx="5"
+          />
+          <polyline class="mapa__guia" points={grupo.ancla} />
+          <rect
+            class="mapa__sombra"
+            x={grupo.x + 5}
+            y={grupo.y + 5}
+            width={grupo.ancho}
+            height={grupo.alto}
+          />
+          <rect
+            class="mapa__caja"
+            x={grupo.x}
+            y={grupo.y}
+            width={grupo.ancho}
+            height={grupo.alto}
+          />
+          <rect
+            class="mapa__cinta"
+            x={grupo.x}
+            y={grupo.y}
+            width={grupo.ancho}
+            height="7"
+          />
+          <text class="mapa__antetitulo" x={grupo.textoX} y={grupo.titulo[0]}>
+            Región
+          </text>
+          <text class="mapa__titulo" x={grupo.textoX} y={grupo.titulo[1]}>
+            {grupo.region}
+          </text>
+          <text class="mapa__conteo" x={grupo.textoX} y={grupo.subtitulo}>
+            {`${grupo.total} organizaciones`}
+          </text>
+        </g>
+      )
+    }
     <g class="mapa__nodos">
       {
         nodos.map((nodo) => (
@@ -45,8 +112,25 @@ const nodos = mapa.nodos.map((nodo, indice) => {
             data-macrozona={nodo.macrozona}
             style={`--color: ${nodo.color}; --retardo: ${nodo.indice * 45}ms`}
           >
+            {nodo.etiqueta && (
+              <polyline class="mapa__guia" points={nodo.etiqueta.guia} />
+            )}
             <circle class="mapa__halo" cx={nodo.x} cy={nodo.y} r="9" />
             <circle class="mapa__punto" cx={nodo.x} cy={nodo.y} r="4.2" />
+            {nodo.etiqueta && (
+              <text
+                class="mapa__rotulo"
+                x={nodo.etiqueta.x}
+                y={nodo.etiqueta.y}
+              >
+                {nodo.comuna}
+              </text>
+            )}
+            {nodo.entrada && (
+              <text class="mapa__item" x={nodo.entrada.x} y={nodo.entrada.y}>
+                {nodo.comuna}
+              </text>
+            )}
             <title>{`${nodo.organizacion} — ${nodo.comuna}, ${nodo.region}`}</title>
           </g>
         ))
@@ -101,6 +185,89 @@ const nodos = mapa.nodos.map((nodo, indice) => {
     transform: scale(1);
   }
 
+  .mapa__guia {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 0.9;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .mapa__abrazadera {
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 0.9;
+    stroke-dasharray: 3 3;
+  }
+
+  .mapa__rotulo,
+  .mapa__item {
+    font-family: var(--texto);
+    fill: var(--tinta);
+  }
+
+  .mapa__rotulo {
+    font-size: 19px;
+    font-weight: 600;
+    dominant-baseline: middle;
+  }
+
+  .mapa__item {
+    font-size: 17px;
+  }
+
+  .mapa__sombra {
+    fill: var(--tinta);
+  }
+
+  .mapa__caja {
+    fill: var(--papel);
+    stroke: var(--tinta);
+    stroke-width: 2;
+  }
+
+  .mapa__cinta {
+    fill: var(--magenta);
+    stroke: var(--tinta);
+    stroke-width: 2;
+  }
+
+  .mapa__antetitulo {
+    font-family: var(--texto);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    fill: var(--gris);
+  }
+
+  .mapa__titulo {
+    font-family: var(--display);
+    font-size: 16px;
+    text-transform: uppercase;
+    fill: var(--tinta);
+  }
+
+  .mapa__conteo {
+    font-family: var(--texto);
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--tinta);
+  }
+
+  .mapa__nodo:hover .mapa__rotulo,
+  .mapa__nodo:hover .mapa__item,
+  .mapa__nodo.es-destacado .mapa__rotulo,
+  .mapa__nodo.es-destacado .mapa__item {
+    font-weight: 700;
+    fill: var(--tinta);
+  }
+
+  .mapa__nodo:hover .mapa__guia,
+  .mapa__nodo.es-destacado .mapa__guia {
+    stroke-width: 1.8;
+  }
+
   .mapa--interactivo .mapa__nodo {
     cursor: pointer;
   }
@@ -110,6 +277,19 @@ const nodos = mapa.nodos.map((nodo, indice) => {
     opacity: 0.5;
   }
 
+  .mapa--interactivo .mapa__nodo.es-apagado .mapa__rotulo,
+  .mapa--interactivo .mapa__nodo.es-apagado .mapa__item,
+  .mapa--interactivo .mapa__nodo.es-apagado .mapa__guia {
+    opacity: 0.22;
+  }
+
+  .mapa--rotulada .mapa__rotulo,
+  .mapa--rotulada .mapa__item,
+  .mapa--rotulada .mapa__guia {
+    animation: asomar 0.45s ease backwards;
+    animation-delay: var(--retardo);
+  }
+
   @keyframes brotar {
     from {
       transform: scale(0);
@@ -117,6 +297,15 @@ const nodos = mapa.nodos.map((nodo, indice) => {
     }
     to {
       transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes asomar {
+    from {
+      opacity: 0;
+    }
+    to {
       opacity: 1;
     }
   }
