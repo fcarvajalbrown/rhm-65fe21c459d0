@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+
+Bases-Plataforma-Red-de-HUBs.xlsx
+*.xlsx
+
+.DS_Store
+Thumbs.db

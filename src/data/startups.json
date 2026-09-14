@@ -1,0 +1,792 @@
+[
+  {
+    "id": "breaking-cupper-chile",
+    "nombre": "BREAKING CUPPER CHILE",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Somos una empresa especialista en nanitecnologia sustentable y desarrollamos soluciones para la agricultura, medio ambiente y energía.",
+    "sitio": "https://breakingcupper.cl/",
+    "enlaces": [
+      "https://www.linkedin.com/company/breaking-cupper/",
+      "https://breakingcupper.cl/"
+    ]
+  },
+  {
+    "id": "foodsys-io",
+    "nombre": "Foodsys.io",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Con la misión de eliminar el desperdicio de alimentos de la cadena de suministro nace Foodsys.io , el 1er Marketplace B2B de alimentos perecibles optimizado por inteligencia artificial para el mercado de Latam.",
+    "sitio": "https://foodsys.io/",
+    "enlaces": [
+      "https://www.linkedin.com/company/foodsys-io/",
+      "https://www.facebook.com/foodsys.io/",
+      "https://www.instagram.com/foodsys.io/?source=omni_redirect",
+      "https://www.youtube.com/@foodsys_io",
+      "https://foodsys.io/"
+    ]
+  },
+  {
+    "id": "bybug",
+    "nombre": "Bybug",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Un sistema de valorización de residuos orgánicos a escala de barrio donde se le paga tanto a los usuarios y recolectores por kilogramo de residuo orgánico que sea valorado mediante Granjas urbanas de insectos, donde se transforman los residuos orgánicos de los usuarios en larvas de insecto para alimentación animal y fertilizante orgánico que se comercializan a la industria silvoagropecuaria, reintegrando los residuos valorizados a la producción de alimentos. \n\nel usuario, se utilizará una aplicación web en la cual podrán hacerse socios de la granja urbana de insectos, recibiendo un llavero token con el cual activan el servicio de acumulación de puntos en la nube, donde por cada kilogramo de residuos entregado en un Drop-off d reciben puntos equivalente a 100 pesos, pudiendo a final de cada año canjear los puntos por el monto total acumulado. Si consideramos una familia de 3 personas, se estima que al finalizar el año recibirán 70 mil pesos chilenos.",
+    "sitio": "https://www.bybug.io/",
+    "enlaces": [
+      "https://www.linkedin.com/company/bybug/posts/?feedView=all",
+      "https://www.instagram.com/bybug_inc/?source=omni_redirect",
+      "https://www.bybug.io/"
+    ]
+  },
+  {
+    "id": "beebrain",
+    "nombre": "Beebrain",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Govtech Lab",
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Es una plataforma de gestión de mantenimiento y postventa inteligente.\nCon un diseño amigable y flexible, nuestro software asiste con información relevante a sus diferentes usuarios para hacer mas eficiente el proceso de mantenimiento y postventa con la incorporación de la trazabilidad de todos los componentes, eventos y actores involucrados en una solicitud de trabajo.\nLos flujos de procesos quedan definidos en el software y luego estos se desarrollan estableciendo estados de eventos y notificaciones para cada responsable.\nEs una solución 100% cloud y será comercializada en modalidad de Software as a Service (SaaS), se puede acceder vía web a través de un computador o dispositivos móviles.\nSu segmento de clientes es multisectorial, dado que podemos atender rubros en Mantención y postventa de infraestructura en centros de salud, edificios habitacionales y comerciales, retail, hotelería, universidades y colegios, centros deportivos, Parques Fotovoltaicos, Empresas de arriendo y venta de maquinaria o vehículos, fabricas, municipalidades en sus diferentes edificios y su infraestructura en la vía publica.\n\nNuestra solución permite crear solicitudes con categorización automática de solicitudes con ML, análisis de sentimiento de clientes, Dashboard con los principales indicadores según la industria, gestión de activos geolocalizados, control y monitoreo de gastos, evaluación de servicio de personal interno como externo.",
+    "sitio": null,
+    "enlaces": []
+  },
+  {
+    "id": "redciclach",
+    "nombre": "Redciclach",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Govtech Lab",
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Sustentabilidad",
+      "Tecnología"
+    ],
+    "descripcion": "Redciclach es un servicio de promueve la economía circular entregando una experiencia interactiva y digitalizada de reciclaje, con un contenedor inteligente que entrega a las empresas y a las personas trazabilidad de su reciclaje, información de su disminución de huella de carbono y aumenta la visibilidad de comercios y empresas adheridas al sistema, por su alto potencial de publicidad e incentivos para las personas por reciclar.",
+    "sitio": "https://redciclach.com/",
+    "enlaces": [
+      "https://www.instagram.com/redciclach/?source=omni_redirect",
+      "https://www.facebook.com/redciclach/",
+      "https://www.youtube.com/channel/UCpQ1Ws4nJvKrwvuUmaHKilQ",
+      "https://www.linkedin.com/company/redciclach/",
+      "https://redciclach.com/"
+    ]
+  },
+  {
+    "id": "fracttal",
+    "nombre": "Fracttal",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": null,
+    "sitio": "https://www.fracttal.com/es/",
+    "enlaces": [
+      "https://www.fracttal.com/es/",
+      "https://www.linkedin.com/company/fracttal/",
+      "https://x.com/FracttalApp",
+      "https://www.youtube.com/channel/UCcKRFfmV5Nm7kXGbBWpTTqw/videos",
+      "https://es-la.facebook.com/fracttal/",
+      "https://www.instagram.com/fracttal/?source=omni_redirect"
+    ]
+  },
+  {
+    "id": "matter-of-trust",
+    "nombre": "Matter Of Trust",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Residencias"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Agropelo* es un mulch de pelo humano en forma de planchas, generado por tejido mecánico. Es un producto que cubre suelos para generar ahorro hídrico en agricultura. Es un producto 100% natural, compostable al final del proceso, reduce la necesidad de agua de riego, aporta nitrógeno a la tierra y reduce el cuidado de las plantas: alejando malezas y conejos del tronco principal.  \n\n\nNos enfocamos en ofrecer una solución para la agricultura en regiones con escasez hídrica con dos salidas principales: poder plantar en zonas áridas, donde hoy día no hay desarrollo agrícola o introducir cepas con mayor necesidad hídrica en zonas donde hoy día no hay mucha diferenciación de productos.",
+    "sitio": "https://matteroftrustchile.org/",
+    "enlaces": [
+      "https://www.instagram.com/mot_chile/",
+      "https://www.linkedin.com/company/mot-chile",
+      "https://www.facebook.com/MatterOfTrustChile",
+      "https://www.youtube.com/channel/UCHg1mDKoLlkQRCR8txpUIIQ",
+      "https://matteroftrustchile.org/"
+    ]
+  },
+  {
+    "id": "paperlux",
+    "nombre": "Paperlux",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje"
+    ],
+    "tematicas": [],
+    "descripcion": "Según datos de la Biblioteca del Congreso Nacional (2020), el 40% de los profesores y el 44% de los estudiantes del país no tienen acceso a herramientas digitales adecuadas, las que serán cada vez más relevantes en el presente y futuro de la educación. Una de las herramientas más avanzadas del mercado son las pizarras interactivas, pero a precios que rodean los 2 millones de pesos, ha hecho que solo estén presente en el 0,36% de las salas de clases del país.  \n\nPaperLux Touch es un dispositivo que consiste en un pequeño Sensor y Lápiz que puede transformar cualquier TV o proyector dentro de una sala de clases en una gran superficie táctil interactiva, convirtiéndolos en una pantalla touch a un precio casi 20 veces menor a las que hoy existen en el mercado, democratizando el acceso a dinámicas de enseñanza digitales y activas para cada aula del país.  \n\nEsta tecnología creada en Chile, es fácilmente escalable y puede adaptarse tanto a educación como a entornos profesionales creativos, promoviendo la innovación y dinámicas colaborativas. Se propone su implementación piloto en espacios colaborativos del Hub Providencia y en establecimientos municipales y particulares de la comuna como caso de éxito para luego escalar al resto del territorio nacional. Primer lugar Jump Chile 2020, 2do Lugar Brain Chile 2021, actualmente parte de red de mentores ángeles UC. y adjudicado de un fondo CORFO Consolida y Expande (2022).",
+    "sitio": "https://paperlux.cl/",
+    "enlaces": [
+      "https://www.instagram.com/paperlux_oficial/?source=omni_redirect",
+      "https://www.facebook.com/people/Paperlux/100092729235707/",
+      "https://www.youtube.com/@paperlux",
+      "https://paperlux.cl/"
+    ]
+  },
+  {
+    "id": "yaku-spa",
+    "nombre": "YAKU SPA",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Residencias",
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Sustentabilidad",
+      "Tecnología"
+    ],
+    "descripcion": "Yaku SpA es una startup de base científica-tecnológica que ha desarrollado un innovador biofiltro para la reutilización sustentable del agua gris, que proviene de duchas, lavado de ropa y lavamanos, es decir, agua residual con bajo riesgo sanitario. Yaku apunta a ser una startup pionera en la reutilización sustentable del agua, implementando su tecnología con patente de invención PCT solicitada, para responder a la crisis hídrica que afecta al territorio nacional y al mundo entero.",
+    "sitio": "https://yaku.cl/",
+    "enlaces": [
+      "https://www.instagram.com/yaku_biofiltro/",
+      "https://www.linkedin.com/company/yaku-biofiltro/",
+      "https://yaku.cl/"
+    ]
+  },
+  {
+    "id": "digitaltex",
+    "nombre": "Digitaltex",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Residencias",
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Extracción de la información del documento, evitando digitaciones. Uso de reglas sobre la información del documento ara mejorar los flujos de decisión administrativos.",
+    "sitio": "https://www.digitaltex.cl/",
+    "enlaces": [
+      "https://www.linkedin.com/company/digitaltex/?originalSubdomain=cl",
+      "https://www.digitaltex.cl/"
+    ]
+  },
+  {
+    "id": "rocketbot-spa",
+    "nombre": "Rocketbot SpA",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Creamos una herramienta de Automatizacion de procesos RPA",
+    "sitio": "https://x.com/Rocketbot_es",
+    "enlaces": [
+      "https://www.linkedin.com/company/rocketrobot/",
+      "https://www.youtube.com/@RocketbotRPA",
+      "https://x.com/Rocketbot_es",
+      "https://www.instagram.com/rocketbot_es/?source=omni_redirect"
+    ]
+  },
+  {
+    "id": "mismatica-management",
+    "nombre": "Mismatica Management",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [],
+    "descripcion": "Desarrollamos aplicaciones de gestión expertas SaaS llamadas \"Citymis Community\", que es una plataforma propia de soluciones de gestión interna e externa interoperables para todo tipo de organizaciones.Tanto estructuras públicas (Municipales, Regionales o Centrales) y en sus tres poderes (Ejecutivo, Legislativo y Judicial), como privadas de diversa índole.",
+    "sitio": "https://twitter.com/mismatica",
+    "enlaces": [
+      "https://www.linkedin.com/company/mismatica/",
+      "https://www.instagram.com/mismaticamanagement",
+      "https://twitter.com/mismatica",
+      "https://www.youtube.com/@mismaticamanagement",
+      "https://www.facebook.com/mismatica.management",
+      "https://mismatica.com/"
+    ]
+  },
+  {
+    "id": "unibox",
+    "nombre": "Unibox",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Nuestro misión es permitir que las instituciones públicas puedan enfrentar el desafío de TD en el menor tiempo posible. Nos sustentamos en la Gestión por Procesos y proveemos un framework que entrega todas las herramientas necesarias para abordar este desafío.",
+    "sitio": "https://comercial.mobilbox.mobi/unibox/#/home",
+    "enlaces": [
+      "https://comercial.mobilbox.mobi/unibox/#/home",
+      "https://www.linkedin.com/company/unibox-latam/?originalSubdomain=cl"
+    ]
+  },
+  {
+    "id": "smartcustoms-spa",
+    "nombre": "Smartcustoms Spa.",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [],
+    "descripcion": "Desarrolla un ecosistema de gestión pública desde las municipalidades.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/4chain/"
+    ]
+  },
+  {
+    "id": "e-holders",
+    "nombre": "e-holders",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Resuelve la Gestión gobierno coporativo en empresas y organizaciones  Documentos Corporativos en un solo lugar",
+    "sitio": "https://junta.digital/",
+    "enlaces": [
+      "https://junta.digital/"
+    ]
+  },
+  {
+    "id": "alara",
+    "nombre": "Alara",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Residencias"
+    ],
+    "tematicas": [
+      "Seguridad"
+    ],
+    "descripcion": "PROTOTIPADO Y TESTEO DE LA PRIMERA VERSION DE SUS JOYAS CON BOTÓN DE PÁNICO PARA LA SEGURIDAD DE LAS PERSONAS, ESPECIFICAMENTE MUJERES",
+    "sitio": "https://www.tiktok.com/@alarachile",
+    "enlaces": [
+      "https://www.instagram.com/alarachile/?source=omni_redirect",
+      "https://www.facebook.com/alarachile",
+      "https://www.youtube.com/@Alarachile",
+      "https://www.tiktok.com/@alarachile",
+      "https://www.linkedin.com/company/alarachile/",
+      "https://alara.cl/?srsltid=AfmBOor_Pzv-tGv1SwDMxP8l2qaQtYWU_UoL9GIMrKvz9hqRSHcaNHU7"
+    ]
+  },
+  {
+    "id": "safe-traveler-tips",
+    "nombre": "Safe Traveler Tips",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [
+      "Transformación digital",
+      "Smartcity"
+    ],
+    "descripcion": "APP MOVIL DESTINADA A SER UNA GUÍA DE INFORMACIÓN DE OCIO Y PRIMERA NECESIDAD TANTO PARA TURISTAS INTERNOS Y RECEPTIVO A NIVEL GLOBAL.",
+    "sitio": "http://travelertips.io/",
+    "enlaces": [
+      "http://travelertips.io/"
+    ]
+  },
+  {
+    "id": "sima-robot",
+    "nombre": "SIMA Robot",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Residencias",
+      "Pilotaje"
+    ],
+    "tematicas": [],
+    "descripcion": "OPTIMIZACIÓN Y AGILIZACIÓN DE PROCESOS Y FLUJOS ADMINISTRATIVOS A TRAVÉS DEL DESARROLLO DE UN SISTEMA DE IA EFICIENTE Y PRECISO QUE MEJORE ESTOS PROCESOS DE GESTIÓN EN INSTITUCIONES PÚBLICAS.",
+    "sitio": "https://x.com/simarobot",
+    "enlaces": [
+      "https://www.facebook.com/SimaRobot/",
+      "https://www.instagram.com/simarobot/?source=omni_redirect",
+      "https://x.com/simarobot",
+      "https://simarobot.com/"
+    ]
+  },
+  {
+    "id": "coderhub",
+    "nombre": "Coderhub",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Coderhub es una Startup compuesta por un equipo de profesionales interdisciplinario, enfocados en desarrollar soluciones digitales a la medida que ayuden a  impulsar la Transformación Digital en Instituciones Públicas. Por otra parte Coderhub trabaja con un enfoque de desarrollo de software No Code, acelerando los tiempos de implementación con hasta 10 veces mayor rápidez, siendo nuestro factor diferenciador para generar valor.",
+    "sitio": "https://www.coderhub.cl",
+    "enlaces": [
+      "https://www.linkedin.com/company/coderhub/",
+      "https://www.facebook.com/coderhubchile",
+      "https://www.instagram.com/coderhub.cl/?source=omni_redirect",
+      "https://www.coderhub.cl"
+    ]
+  },
+  {
+    "id": "aictive",
+    "nombre": "Aictive",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Bienestar"
+    ],
+    "descripcion": null,
+    "sitio": "https://aictive.co/",
+    "enlaces": [
+      "https://www.instagram.com/aictive.co",
+      "https://www.facebook.com/aictive.co/",
+      "https://www.linkedin.com/company/aictive/posts/?feedView=all",
+      "https://aictive.co/"
+    ]
+  },
+  {
+    "id": "nucleo-ods-spa",
+    "nombre": "Núcleo-ODS SpA",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Núcleo es un ecosistema digital que comunica en un solo canal a proveedores, trabajadores, ejecutivos y directores de empresas o servicios públicos, para el control y seguimiento de proyectos, indistinto a la industria a la cual pertenezca el contratante (ambientales, mineros, constructores, bancos, municipalidades, gobierno, etc.)",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/n-cleo-ods/",
+      "https://www.instagram.com/nucleo_ods/?igshid=MmIzYWVlNDQ5Yg%3D%3D"
+    ]
+  },
+  {
+    "id": "swarmob",
+    "nombre": "Swarmob",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [],
+    "descripcion": "FACILITAR LA GESTIÓN DE METODOLOGÍAS DE APRENDIZAJE BASADO EN PROYECTOS, A TRAVÉS DEL DESARROLLO Y TESTEO DE UNA PLATAFORMA A DISPONIBILIZAR EN DIFERENTES ESTABLECIMIENTOS",
+    "sitio": "https://x.com/Swarmob",
+    "enlaces": [
+      "https://www.instagram.com/Swarmob/",
+      "https://www.facebook.com/Swarmob/",
+      "https://www.linkedin.com/company/swarmob/",
+      "https://www.youtube.com/channel/UCBSKH5g1rBS5GpZCCXk2QmQ",
+      "https://x.com/Swarmob",
+      "https://swarmob.com/"
+    ]
+  },
+  {
+    "id": "beeing",
+    "nombre": "Beeing",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Govtech Lab"
+    ],
+    "tematicas": [],
+    "descripcion": "Beeing es un  servicio de trazabilidad genética de abejas. Lo cual implica que, utilizando herramientas genéticas con inteligencia artificial, es posible dilucidar el origen, consanguinidad de las abejas y ausencia de africanización. Esto es útil tanto para el mejoramiento y la prevención de enfermedades genéticas futuras,y permite certificar calidad de abejas. Nuestra certificación permite al criador de reinas de abejas vender sus abejas reinas a un  mayor precio y poder ingresar a nuevos mercados. Actualmente no existen servicios de esta categoría (genéticos) en Chile y el mundo. Con  un  servicio que genere esta certificación, se espera ingresar a nuevos mercados y obtener mejores precios por las abejas reinas mundialmente. La sobrevivencia de la apicultura es un  problema global y servicios genéticos a este nivel existen solo en humanos utilizando la misma tecnología, por lo que esta validado su uso. Lo nuevo es aplicarlo en apicultura y mejorarla.",
+    "sitio": "https://beeingcompany.cl/",
+    "enlaces": [
+      "https://www.linkedin.com/company/beeingcompany/",
+      "https://www.instagram.com/beeingcompany/",
+      "https://www.facebook.com/beeingoficial",
+      "https://www.youtube.com/@beeingcompany",
+      "https://beeingcompany.cl/"
+    ]
+  },
+  {
+    "id": "luuk",
+    "nombre": "Luuk",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Software en la nube que permite digitalizar procesos dentro de las organizaciones. Pueden ser checklists o formularios con distintos fines, como: controlar, supervisar o registrar datos en terreno de manera mas eficiente y rapida. Todo esto por medio de una APP muy facil y sencilla de utilizar.",
+    "sitio": "https://luuk.cl",
+    "enlaces": [
+      "https://www.youtube.com/@luukforms",
+      "https://www.linkedin.com/company/luuk-chile/",
+      "https://www.instagram.com/luuk.cl/?source=omni_redirect",
+      "https://luuk.cl"
+    ]
+  },
+  {
+    "id": "101-software",
+    "nombre": "101 Software",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Empresa que permite a las administraciones públicas, conectar con sus ciudadanos a través de herramientas tecnológicas como sedes electrónicas, aplicaciones móviles y módulos con inteligencia artificial para gestionar trámites y servicios ciudadanos, generando sedes electrónicas que permitan digitalizar, automatizar y generar pagos de impuestos u otros procesos dentro de sus gobiernos, utilizar los datos para ejercer modelos de gobernanza y dar accesibilidad a la población rural.",
+    "sitio": "https://1cero1.com/",
+    "enlaces": [
+      "https://www.facebook.com/people/1Cero1-Software/100066302990134/#",
+      "https://www.instagram.com/1cero1.software/?hl=es-la&source=omni_redirect",
+      "https://www.youtube.com/channel/UC8wOZqEcKWXFFnUcwDM4Zvw",
+      "https://1cero1.com/"
+    ]
+  },
+  {
+    "id": "sodtrack",
+    "nombre": "Sodtrack",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital",
+      "Smartcity"
+    ],
+    "descripcion": "Tecnología para la gestión y coordinación de servicios en terreno como auditorías, inspecciones, etc. que son ejecutadas por terceros en nombre de un mandante. \n\nPermite, entre otras cosas, el seguimiento, optimización de rutas, calendarización, seguimiento en tiempo real, armado de checklists de tareas a ejecutar en un aplicativo móvil, conciliación de trabajos realizados para ejecutar pagos posteriores.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/sodtrack/"
+    ]
+  },
+  {
+    "id": "mawi",
+    "nombre": "Mawi",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "Mawi es una plataforma web para el control y gestión de proyectos de construcción. Desde el control del presupuesto y costos, hasta el seguimiento de inspecciones, calidad y documental",
+    "sitio": "https://mawi.io/",
+    "enlaces": [
+      "https://www.linkedin.com/company/holamawi/",
+      "https://www.instagram.com/mawi_latam/?source=omni_redirect",
+      "https://www.youtube.com/@holamawi",
+      "https://www.facebook.com/mawiapp",
+      "https://mawi.io/"
+    ]
+  },
+  {
+    "id": "buildalab",
+    "nombre": "BuildaLab",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "BuildaLab es una Startup de base científico-tecnológica de ingeniería estructural. Nuestro objetivo es incorporar nuevas soluciones tecnológicas basadas en inteligencia artificial al mercado de la construcción, entregando soluciones que atacan las problemáticas actuales, desde el punto de vista técnico, económico y medioambiental.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/buildalab/"
+    ]
+  },
+  {
+    "id": "moment-of-people",
+    "nombre": "Moment Of People",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "transformamos canales y gestion de servicio potenciandolos con IA, para controlar datos, automatizar procesos y mejorar relaciones evolucionando la operacion interna y relaciones con los ciudadanos  atraves de chatbots inteligentes conversacionales conectados a poderosos sistemas de control",
+    "sitio": "https://x.com/momentofpeople",
+    "enlaces": [
+      "https://www.linkedin.com/company/momentofpeople",
+      "https://www.instagram.com/momentofpeople/?hl=es-la&source=omni_redirect",
+      "https://www.youtube.com/@momentofpeople",
+      "https://x.com/momentofpeople",
+      "https://www.facebook.com/momentofpeople",
+      "https://www.momentofpeople.com/"
+    ]
+  },
+  {
+    "id": "califica",
+    "nombre": "Califica",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [],
+    "descripcion": "Califica es una plataforma web que ayuda a los docentes escolares a generar material educativo a través de Inteligencia Artificial.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/somoscalifica/?originalSubdomain=pe",
+      "https://www.youtube.com/@somoscalifica",
+      "https://www.facebook.com/holacalifica/",
+      "https://www.instagram.com/somoscalifica/?source=omni_redirect"
+    ]
+  },
+  {
+    "id": "tank",
+    "nombre": "Tank",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Seguridad"
+    ],
+    "descripcion": "Creamos sistemas de defensa en el área de radiofrecuencias para proteger a público masivo",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/tnk-defense/?originalSubdomain=cl"
+    ]
+  },
+  {
+    "id": "gcare",
+    "nombre": "Gcare",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Adulto mayor"
+    ],
+    "descripcion": "Gcare es una innovación social tecnológica que detecta y responde a situaciones de emergencias en personas mayores conectándolos rápidamente con familiares o contactos de apoyo a través de un smartwatch con botón de pánico y gps desarrollado para personas mayores.",
+    "sitio": "https://www.tiktok.com/@gcarecl",
+    "enlaces": [
+      "https://www.linkedin.com/company/gcarecl/",
+      "https://www.instagram.com/gcarecl/?source=omni_redirect",
+      "https://www.youtube.com/@gcarecl",
+      "https://www.tiktok.com/@gcarecl",
+      "https://gcare.cl/"
+    ]
+  },
+  {
+    "id": "candel-spa",
+    "nombre": "Candel SPA",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Salud"
+    ],
+    "descripcion": "Empresa médica enfocada en el desarrollo y fabricación de dispositivos médicos para la rehabilitación neurológica, como el dispositivo CandelStim tDCS, el cual potencia y complementa el efecto de la terapia para la recuperación de enfermedades neurológicas como accidente cerebrovascular (ACV), depresión mayor, dolor crónico no oncológico, migraña, afasia, deterioro cognitivo.",
+    "sitio": "https://www.candelmed.cl/",
+    "enlaces": [
+      "https://www.linkedin.com/company/candelmedicalcompany/",
+      "https://www.candelmed.cl/"
+    ]
+  },
+  {
+    "id": "ecofrit",
+    "nombre": "ECOFRIT",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio",
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "ECOFRIT, transforma aceite vegetal usado en gelatina biodegradable sólida, facilitando su manejo y disposición. Mejora la generación de biogás en biodigestores hasta 10 veces, promoviendo una energía más sostenible. ECOFRIT empodera comunidades al convertir residuos en velas, generando ingresos y fomentando la economía circular",
+    "sitio": "https://www.tiktok.com/@ecofrit",
+    "enlaces": [
+      "https://www.linkedin.com/company/ecofrit/",
+      "https://www.instagram.com/ecofrit/?source=omni_redirect",
+      "https://www.tiktok.com/@ecofrit",
+      "https://www.facebook.com/people/Eco-Frit/pfbid0ge8aR1qGJ7k1i2ZzkbAZeVHAVX9faEhc4gvjuZ78zVPRKpVef2F2yzTrDyFZf7dRl/?locale=es_LA",
+      "https://x.com/ecofrit?s=11&t=_HioDMmHnR2MvhCMxkWD0A",
+      "https://www.youtube.com/@ECOFRIT",
+      "https://ecofrit.cl/"
+    ]
+  },
+  {
+    "id": "zerowastex",
+    "nombre": "ZeroWasteX",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Gobierno digital para ciudades residuo cero y economía circular. Revoluciona la gestión de residuos de tu ciudad.",
+    "sitio": "https://www.zerowastex.com.br/",
+    "enlaces": [
+      "https://www.linkedin.com/company/www.zerowastex.com.br/about/",
+      "https://www.zerowastex.com.br/"
+    ]
+  },
+  {
+    "id": "huellasmart",
+    "nombre": "HuellaSmart",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "HuellaSmart es una startup que ofrece soluciones innovadoras para la gestión de emisiones de gases de efecto invernadero (GEI) en organizaciones y eventos. Utilizando una plataforma basada en SaaS, HuellaSmart facilita el monitoreo, análisis y reducción de la huella de carbono, ayudando a las empresas a cumplir con los estándares internacionales de sostenibilidad. Su enfoque se centra en proporcionar herramientas accesibles y eficientes para la recolección de datos, elaboración de informes y desarrollo de estrategias de mitigación ambiental.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/huellasmart/about/"
+    ]
+  },
+  {
+    "id": "medetechni",
+    "nombre": "MedETechni",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio",
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Salud"
+    ],
+    "descripcion": "MedETechni es una startup dedicada a la innovación en el tratamiento de heridas crónicas, como las úlceras por pie diabético. Nuestra tecnología permite reducir el tiempo de curación en un 60%, logrando resultados en tan solo 4 semanas, comparado con los métodos tradicionales que tardan hasta 6 meses.",
+    "sitio": "https://x.com/medetechni",
+    "enlaces": [
+      "https://www.facebook.com/MedETechni/",
+      "https://x.com/medetechni",
+      "https://www.instagram.com/medetechni/?source=omni_redirect",
+      "https://www.linkedin.com/company/medetechni/",
+      "https://www.medetechni.com/"
+    ]
+  },
+  {
+    "id": "hera-materials",
+    "nombre": "Hera Materials",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio",
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Sustentabilidad"
+    ],
+    "descripcion": "Somos una empresa que desea terminar con el problema de la contaminación del plástico, mediante la fabricación de biomateriales, utilizando IA, robótica y Economía Circular.",
+    "sitio": null,
+    "enlaces": []
+  },
+  {
+    "id": "upbirk",
+    "nombre": "Upbirk",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [
+      "Transformación digital"
+    ],
+    "descripcion": "UPBIRK es un ecosistema integral de soluciones tecnológicas orientadas a fomentar un desarrollo activo de la innovación empresarial por parte de los diferentes actores de un ecosistema de emprendimiento. Nuestra solución está dirigida a actores del ecosistema que buscan impulsar proyectos de innovación, proporcionando un espacio para desarrollar sus proyectos de innovación y entregar conjuntamente un portafolio que permite gestionar y solicitar información a empresas en etapa temprana. Esto incluye el monitoreo de los avances de cada proyecto, portafolio o programa creado, y la generación de reportes en tiempo real con diversos KPIs según las necesidades de cada organización. Para emprendedores, ofrecemos una herramienta de creación de proyectos de innovación que agrupa todos los aspectos relacionados al desarrollo y validación de una startup que usualmente requeridos por los actores del ecosistema con los cuales están involucrados a lo largo de su ciclo de vida. Nuestra diferenciación es el uso de Inteligencia Artificial y un método propio para el acompañamiento de los usuarios en el desarrollo de ideas de negocios, la cual permite acelerar su desarrollo compartiendo los avances obtenidos a los stakeholders a los cuales se encuentra conectado.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.instagram.com/upbirkapp/",
+      "https://www.linkedin.com/company/upbirk/"
+    ]
+  },
+  {
+    "id": "meta-v",
+    "nombre": "Meta V",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio",
+      "Residencias",
+      "Pilotaje"
+    ],
+    "tematicas": [
+      "Salud"
+    ],
+    "descripcion": "METAV es un exclusivo sistema de \"scoring\" que facilita la generación, análisis y entrega de reportes en condición física-metabólica a las personas. Nuestra plataforma de base científica, tiene como objetivo poder utilizar otras formas de medir la composición física humana de manera mas eficiente que el tan cuestionado IMC.\n\nMETAV genera una prescripción de ejercicio físico coherente con las condiciones del evaluado, sobre la base del gasto metabólico necesario para lograr un estado saludable. Meta V es la primera plataforma con base científica democrática que busca activar la consciencia metabólica de las personas desde los 6 años en adelante.",
+    "sitio": null,
+    "enlaces": [
+      "https://www.linkedin.com/company/meta-v/"
+    ]
+  },
+  {
+    "id": "simple-park",
+    "nombre": "Simple Park",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio"
+    ],
+    "tematicas": [],
+    "descripcion": "Sistema tecnológico de administración y cobro por el uso de los estacionamientos en espacios públicos y privados.",
+    "sitio": "https://x.com/SimplePark_App",
+    "enlaces": [
+      "https://www.instagram.com/simplepark_app/",
+      "https://www.facebook.com/people/SimplePark/100079677585910/#",
+      "https://x.com/SimplePark_App",
+      "https://www.linkedin.com/company/simpleparkapp/",
+      "https://simplepark.cl/"
+    ]
+  },
+  {
+    "id": "waasti",
+    "nombre": "WAASTI",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Repositorio",
+      "Residencias"
+    ],
+    "tematicas": [
+      "Sustentabilidad",
+      "Tecnología"
+    ],
+    "descripcion": "Waasti es una plataforma innovadora enfocada en la gestión eficiente de residuos, que conecta a recolectores, gestores de residuos y usuarios generadores de desechos a través de un sistema digital integral. Nuestro objetivo es transformar la manera en que se manejan los residuos en las ciudades, facilitando su reciclaje, trazabilidad y reduciendo el impacto ambiental.",
+    "sitio": "https://waasti.com/",
+    "enlaces": [
+      "https://www.instagram.com/waasti.app/",
+      "https://www.linkedin.com/showcase/waasti-super-app/?originalSubdomain=cl",
+      "https://waasti.com/"
+    ]
+  },
+  {
+    "id": "midda",
+    "nombre": "Midda",
+    "comuna": "HUB Providencia",
+    "programas": [
+      "Pilotaje",
+      "Residencias"
+    ],
+    "tematicas": [
+      "Sustentabilidad",
+      "Tecnología"
+    ],
+    "descripcion": "Existimos para crear un progreso rentable y sostenible. Monitoreamos en tiempo real con tecnología IOT + IA para optimizar procesos y aumentar la productividad, en armonía con las personas y el medio ambiente.",
+    "sitio": null,
+    "enlaces": []
+  }
+]

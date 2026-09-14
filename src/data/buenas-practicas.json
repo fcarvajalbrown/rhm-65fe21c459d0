@@ -1,0 +1,46 @@
+[
+  {
+    "id": "guia-de-herramientas-para-proyectos-de-innovacion-publica-laboratorio-de-gobierno",
+    "area": "GOBERNANZA Y ESTRATEGIA",
+    "subarea": "Metodologías de innovación pública / Design thinking aplicado al Estado",
+    "origen": "HUB Providencia",
+    "nombre": "Guía de Herramientas para Proyectos de Innovación Pública — Laboratorio de Gobierno",
+    "descripcion": "Metodología oficial del LabGob estructurada en 5 fases: Fase 0 Exploración institucional, Fase 1 Investigación del problema, Fase 2 Ideación de soluciones, Fase 3 Desarrollar y evaluar piloto, y Fase 4 Implementación de la solución, más una fase transversal de perspectiva de género. Incluye 21 herramientas descargables (mapa de actores, perfil de persona usuaria, viaje de usuario, ideación 3x3x3, matriz PESTEL, service blueprint, diseño de evaluación, matrices SIPOC y RACI, entre otras) para abordar problemas públicos con soluciones co-creadas y centradas en las personas.",
+    "anio": "2024",
+    "contacto": "Laboratorio de Gobierno — lab.gob.cl/contacto",
+    "documentacion": "https://www.lab.gob.cl/landing-block"
+  },
+  {
+    "id": "double-diamond-design-council-uk",
+    "area": "GOBERNANZA Y ESTRATEGIA",
+    "subarea": "Metodologías de diseño e innovación / Marco de proceso",
+    "origen": "HUB Providencia",
+    "nombre": "Double Diamond — Design Council UK",
+    "descripcion": "Marco de referencia universal del proceso de diseño e innovación, aplicable a cualquier proyecto independiente de los métodos o herramientas utilizados. Se estructura en dos diamantes (divergencia–convergencia) con 4 etapas: Discover (comprender el problema investigando con las personas afectadas, no asumirlo), Define (redefinir el desafío a partir de los hallazgos), Develop (co-diseñar múltiples respuestas posibles con actores diversos) y Deliver (testear soluciones a pequeña escala, descartar las que no funcionan y mejorar las que sí). Creado en 2004 y disponible bajo licencia CC BY 4.0. Evolucionó posteriormente al Framework for Innovation del mismo Design Council.",
+    "anio": "2024",
+    "contacto": "Design Council UK — designcouncil.org.uk/contact",
+    "documentacion": "https://www.designcouncil.org.uk/resources/the-double-diamond/"
+  },
+  {
+    "id": "adaptacion-de-herramientas-de-pacto-de-productividad-chile-para-fortalecer-la-inclusion-laboral",
+    "area": "INCLUSIÓN E INTERMEDIACIÓN LABORAL",
+    "subarea": "Inclusión laboral de personas con discapacidad / Diagnóstico organizacional (Ley 21.015)",
+    "origen": "HUB Providencia",
+    "nombre": "Adaptación de herramientas de Pacto de Productividad Chile para fortalecer la inclusión laboral",
+    "descripcion": "Trabajo colaborativo iniciado en 2020 con Pacto de Productividad Chile (réplica del modelo territorial colombiano de inclusión laboral de personas con discapacidad). A partir de la transferencia de conocimientos, el equipo adaptó a la realidad comunal la \"Lista de Chequeo de Facilitadores y Barreras\" y elaboró el \"Manual de Aplicación del Listado de Facilitadores y Barreras para la Inclusión Laboral\", que estandarizó su uso en los procesos de intermediación, junto a un formato de informe diagnóstico tipo. La herramienta evalúa 5 dominios basados en la CIF (OMS, 2001) por tipo de discapacidad, clasificando cada aspecto como facilitador, barrera parcial o barrera total. La adaptación fue validada mediante piloto con la empresa Red Apis, sentando las bases para nuevas herramientas de diagnóstico e intermediación del programa.",
+    "anio": "2020",
+    "contacto": "Departamento de Empleo Providencia",
+    "documentacion": "Manual de buenas prácticas Pacto de Productividad Chile (PDF) — www.pactodeproductividad.cl"
+  },
+  {
+    "id": "seminario-del-instinto-al-algoritmo-ia-aplicada-al-talento-buena-practica-en-red-territorial",
+    "area": "INCLUSIÓN E INTERMEDIACIÓN LABORAL",
+    "subarea": "Trabajo en red territorial / IA aplicada a empleabilidad / Vinculación con empresas",
+    "origen": "HUB Providencia",
+    "nombre": "Seminario \"Del Instinto al Algoritmo: IA aplicada al Talento\" — Buena práctica en red territorial",
+    "descripcion": "Seminario organizado colaborativamente por las 8 OMIL de la Red Territorial Emplea Sur Oriente 2025, orientado a acercar a empresas y equipos de intermediación al uso estratégico de la IA en gestión del talento, trabajo multigeneracional y tendencias del mercado laboral. Realizado el 11 de junio de 2025 en HUB Providencia, convocó a 33 empresas y 51 profesionales de RRHH del sector privado. El modelo de gestión incluyó levantamiento de temáticas vía encuesta a empresas, distribución de responsabilidades por comuna, financiamiento mixto (FOMIL de cada comuna + presupuesto municipal Providencia) y encuesta de satisfacción con 100% de valoración positiva. Demuestra cómo la articulación territorial entre OMILs permite escalar actividades que ninguna comuna ejecutaría sola.",
+    "anio": "2025",
+    "contacto": "Departamento de Empleo Providencia — LinkedIn: Dpto Empleo Providencia",
+    "documentacion": "Presentación \"Buena Práctica en Red Territorial\" (PDF interno)"
+  }
+]

@@ -1,0 +1,674 @@
+---
+import Base from "../layouts/Base.astro";
+import MapaChile from "../components/MapaChile.astro";
+import miembros from "../data/miembros.json";
+import startups from "../data/startups.json";
+import practicas from "../data/buenas-practicas.json";
+import { proximas } from "../lib/agenda.js";
+import { url } from "../lib/rutas.js";
+
+const regiones = [...new Set(miembros.map((m) => m.region))];
+const COWORKS = 6;
+
+const cifras = [
+  { valor: miembros.length, texto: "Organizaciones miembro", color: "var(--magenta)" },
+  { valor: regiones.length, texto: "Regiones representadas", color: "var(--turquesa)" },
+  { valor: startups.length, texto: "Startups en el repositorio", color: "var(--amarillo)" },
+  { valor: COWORKS, texto: "Coworks en la Red", color: "var(--naranja)" },
+];
+
+const oferta = [
+  {
+    titulo: "Hubs y coworks",
+    texto: "Hubs y coworks interconectados en distintas comunas, abiertos a emprendedores, vecinos, estudiantes y organizaciones.",
+    color: "var(--magenta)",
+    numero: "01",
+  },
+  {
+    titulo: "Mentores y expertos",
+    texto: "Red de mentores, expertos y servicios públicos que acompañan a los proyectos de cada territorio.",
+    color: "var(--turquesa)",
+    numero: "02",
+  },
+  {
+    titulo: "Programas compartidos",
+    texto: "Incubación, aceleración e innovación abierta diseñadas una vez y replicadas en toda la Red.",
+    color: "var(--amarillo)",
+    numero: "03",
+  },
+];
+
+const conteoRegiones = regiones
+  .map((region) => ({
+    region,
+    total: miembros.filter((m) => m.region === region).length,
+    macrozona: miembros.find((m) => m.region === region).macrozona,
+  }))
+  .sort((a, b) => b.total - a.total);
+
+const colorMacrozona = {
+  Norte: "var(--naranja)",
+  Centro: "var(--amarillo)",
+  Metropolitana: "var(--magenta)",
+  Sur: "var(--turquesa)",
+  Austral: "var(--violeta)",
+};
+
+const pasos = [
+  "Responder la encuesta de diagnóstico anual de la Red.",
+  "Firmar el Cartel de la Red en un hito realizado en HUB Providencia.",
+  "Firmar convenio de colaboración con la Municipalidad de Providencia.",
+];
+
+---
+
+<Base
+  titulo="Municipios que innovan juntos"
+  descripcion="La Red Chilena de Hubs Municipales reúne a 32 organizaciones municipales de nueve regiones para articular capacidades, conocimiento, espacios y recursos en favor de emprendedores, startups y empresas."
+>
+  <section class="portada">
+    <div class="portada__geometria" aria-hidden="true">
+      <span class="forma forma--semi forma--magenta"></span>
+      <span class="forma forma--tri forma--violeta"></span>
+      <span class="forma forma--cuadro forma--amarillo"></span>
+      <span class="forma forma--semi-baja forma--naranja"></span>
+      <span class="forma forma--tri-baja forma--turquesa"></span>
+    </div>
+
+    <div class="envoltorio portada__caja">
+      <div class="portada__texto">
+        <p class="rotulo">Red Chilena de Hubs Municipales</p>
+        <h1>Municipios que <em>innovan</em> juntos</h1>
+        <p class="bajada">
+          Treinta y dos organizaciones municipales, de Arica a Punta Arenas, articulando
+          capacidades, conocimientos, espacios y recursos para sus emprendedores, startups y
+          empresas.
+        </p>
+        <div class="portada__acciones">
+          <a class="boton" href={url("/integrantes")}>Conoce a los integrantes</a>
+          <a class="boton boton--claro" href="#sumarse">Cómo integrarse</a>
+        </div>
+      </div>
+
+      <figure class="portada__foto">
+        <img
+          src={url("/img/firma-red.jpg")}
+          alt="Autoridades municipales junto al Cartel de la Red Chilena de Hubs Municipales tras firmarlo"
+          width="1080"
+          height="720"
+          loading="eager"
+        />
+        <figcaption>Firma del Cartel de la Red en HUB Providencia.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="cifras">
+    <div class="envoltorio cifras__rejilla">
+      {
+        cifras.map((cifra) => (
+          <div class="cifra">
+            <span class="cifra__valor" style={`--color: ${cifra.color}`}>{cifra.valor}</span>
+            <span class="cifra__texto">{cifra.texto}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="envoltorio contexto">
+      <div>
+        <p class="rotulo">Qué es la Red</p>
+        <h2>Una alianza entre comunas, no un programa de una sola</h2>
+        <p class="bajada">
+          Nació en mayo de 2025 como una iniciativa colaborativa para transformar el rol de los
+          municipios en agentes activos del desarrollo local sostenible, posicionándolos como
+          articuladores de innovación, emprendimiento y colaboración en sus comunidades.
+        </p>
+        <p class="bajada">
+          Un año después sumaba 31 integrantes. Hoy son {miembros.length}, coordinados por HUB
+          Providencia en su rol de Secretaría Ejecutiva.
+        </p>
+      </div>
+
+      <blockquote class="cita">
+        <p>
+          Articular capacidades, conocimientos, espacios y recursos de distintas comunas para
+          impulsar el desarrollo de emprendedores, startups y empresas, generando valor económico,
+          social y ambiental para sus territorios y las personas.
+        </p>
+        <footer>Cartel de la Red</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="seccion oferta">
+    <div class="envoltorio">
+      <p class="rotulo">Qué ofrecemos como Red</p>
+      <h2 class="oferta__titulo">
+        Un ecosistema de colaboración entre comunas mediante un modelo de gestión comunal tipo HUB.
+      </h2>
+      <div class="oferta__rejilla">
+        {
+          oferta.map((item) => (
+            <article class="oferta__tarjeta" style={`--color: ${item.color}`}>
+              <span class="oferta__numero">{item.numero}</span>
+              <h3>{item.titulo}</h3>
+              <p>{item.texto}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion territorio">
+    <div class="envoltorio territorio__caja">
+      <div class="territorio__mapa">
+        <MapaChile />
+      </div>
+      <div class="territorio__texto">
+        <p class="rotulo">El territorio</p>
+        <h2>De Arica a Punta Arenas</h2>
+        <p class="bajada">
+          La Red no se concentra en una sola zona. Cada punto del mapa es una organización municipal
+          que decidió abrir un espacio para el emprendimiento y la innovación en su comuna.
+        </p>
+        <ul class="territorio__lista">
+          {
+            conteoRegiones.map((item) => (
+              <li>
+                <span class="territorio__marca" style={`--color: ${colorMacrozona[item.macrozona]}`} />
+                <span class="territorio__region">{item.region}</span>
+                <span class="territorio__total">{item.total}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="boton" href={url("/integrantes")}>Ver la ficha de cada integrante</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion coworks">
+    <div class="envoltorio coworks__caja">
+      <div>
+        <p class="rotulo">Espacios</p>
+        <h2>Coworks abiertos a la comunidad</h2>
+        <p class="bajada">
+          La Red pone a disposición {COWORKS} coworks para trabajar, colaborar y desarrollar
+          proyectos: puestos de acceso abierto, salas de reuniones, laboratorios y capacitaciones.
+          El material de difusión de la Red mapea los de Providencia, Independencia, Lo Barnechea y
+          La Florida.
+        </p>
+      </div>
+      <figure class="coworks__figura">
+        <img
+          src={url("/img/coworks.jpg")}
+          alt="Infografía de la Red con los coworks de Providencia, Independencia, Lo Barnechea y La Florida"
+          width="1800"
+          height="1202"
+          loading="lazy"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <section class="seccion explora">
+    <div class="envoltorio">
+      <p class="rotulo">Explora la Red</p>
+      <div class="explora__rejilla">
+        <a class="explora__tarjeta" href={url("/integrantes")}>
+          <span class="explora__cifra">{miembros.length}</span>
+          <h3>Integrantes</h3>
+          <p>Mapa y ficha de cada organización miembro.</p>
+        </a>
+        <a class="explora__tarjeta" href={url("/agenda")}>
+          <span class="explora__cifra">{proximas.length}</span>
+          <h3>Actividades próximas</h3>
+          <p>Eventos, capacitaciones y mesas territoriales.</p>
+        </a>
+        <a class="explora__tarjeta" href={url("/startups")}>
+          <span class="explora__cifra">{startups.length}</span>
+          <h3>Startups</h3>
+          <p>Repositorio de soluciones vinculadas a la Red.</p>
+        </a>
+        <a class="explora__tarjeta explora__tarjeta--cerrada" href={url("/acceso")}>
+          <span class="explora__cifra">{practicas.length}</span>
+          <h3>Buenas prácticas</h3>
+          <p>Metodologías y aprendizajes. Disponible para integrantes.</p>
+          <span class="explora__candado">Acceso miembros</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sumarse" id="sumarse">
+    <div class="envoltorio">
+      <h2>¿Quieres integrar la Red?</h2>
+      <ol class="sumarse__pasos">
+        {
+          pasos.map((paso, indice) => (
+            <li>
+              <span class="sumarse__numero">{String(indice + 1).padStart(2, "0")}</span>
+              <p>{paso}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="sumarse__pie">
+        <a class="boton" href={url("/acceso")}>Contactar a la coordinación</a>
+        <p>Luis Felipe Valenzuela, Coordinador de la Red de Hubs.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .portada {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fdf4fb 0%, var(--lila) 55%, #e9ddf5 100%);
+    border-bottom: var(--linea);
+    padding-block: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .portada__geometria {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .forma {
+    position: absolute;
+    display: block;
+  }
+
+  .forma--semi {
+    width: 190px;
+    height: 380px;
+    border-radius: 0 380px 380px 0;
+    left: -95px;
+    top: 4%;
+  }
+
+  .forma--semi-baja {
+    width: 150px;
+    height: 300px;
+    border-radius: 0 300px 300px 0;
+    left: -78px;
+    bottom: 2%;
+  }
+
+  .forma--tri {
+    width: 0;
+    height: 0;
+    border-top: 90px solid transparent;
+    border-bottom: 90px solid transparent;
+    border-left: 130px solid var(--violeta);
+    left: 0;
+    top: 46%;
+  }
+
+  .forma--tri-baja {
+    width: 0;
+    height: 0;
+    border-top: 60px solid transparent;
+    border-bottom: 60px solid transparent;
+    border-left: 86px solid var(--turquesa);
+    right: -20px;
+    top: 8%;
+  }
+
+  .forma--cuadro {
+    width: 84px;
+    height: 84px;
+    left: 3%;
+    bottom: 16%;
+  }
+
+  .forma--magenta {
+    background: var(--magenta);
+  }
+  .forma--amarillo {
+    background: var(--amarillo);
+  }
+  .forma--naranja {
+    background: var(--naranja);
+  }
+
+  .portada__caja {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .portada__texto h1 em {
+    font-style: normal;
+    color: var(--magenta);
+    -webkit-text-stroke: 2px var(--tinta);
+    paint-order: stroke fill;
+  }
+
+  .portada__texto .bajada {
+    margin-top: 1.5rem;
+  }
+
+  .portada__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 2rem;
+  }
+
+  .portada__foto {
+    margin: 0;
+  }
+
+  .portada__foto img {
+    border: var(--linea);
+    box-shadow: var(--sombra);
+  }
+
+  .portada__foto figcaption {
+    font-size: 0.85rem;
+    color: #45454f;
+    margin-top: 0.85rem;
+  }
+
+  .cifras {
+    background: var(--tinta);
+    color: var(--papel);
+    padding-block: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
+  .cifras__rejilla {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .cifra {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .cifra__valor {
+    font-family: var(--display);
+    font-size: clamp(2.8rem, 5.5vw, 4.4rem);
+    line-height: 1;
+    color: var(--color);
+  }
+
+  .cifra__texto {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .contexto {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  .contexto h2 {
+    margin-bottom: 1.4rem;
+  }
+
+  .cita {
+    margin: 0;
+    border: var(--linea);
+    border-left: 14px solid var(--magenta);
+    box-shadow: var(--sombra);
+    padding: 2rem;
+    background: var(--papel);
+  }
+
+  .cita p {
+    font-size: 1.22rem;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .cita footer {
+    font-family: var(--display);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .oferta {
+    background: var(--lila);
+    border-block: var(--linea);
+  }
+
+  .oferta__titulo {
+    max-width: 22ch;
+    margin-bottom: 3rem;
+  }
+
+  .oferta__rejilla {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .oferta__tarjeta {
+    background: var(--color);
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    padding: 2rem 1.75rem 2.25rem;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+  }
+
+  .oferta__numero {
+    font-family: var(--display);
+    font-size: 2.6rem;
+    line-height: 1;
+    mix-blend-mode: multiply;
+    opacity: 0.45;
+  }
+
+  .oferta__tarjeta p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .territorio__caja {
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  .territorio__lista {
+    list-style: none;
+    margin: 2rem 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .territorio__lista li {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr auto;
+    align-items: center;
+    gap: 0.85rem;
+    padding-block: 0.6rem;
+    border-bottom: 1px solid rgba(12, 12, 14, 0.16);
+  }
+
+  .territorio__marca {
+    width: 1rem;
+    height: 1rem;
+    background: var(--color);
+    border: 1.5px solid var(--tinta);
+  }
+
+  .territorio__region {
+    font-weight: 600;
+  }
+
+  .territorio__total {
+    font-family: var(--display);
+    font-size: 1.05rem;
+  }
+
+  .coworks {
+    background: var(--tinta);
+    color: var(--papel);
+  }
+
+  .coworks .rotulo::before {
+    background: var(--turquesa);
+  }
+
+  .coworks .bajada {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .coworks__caja {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .coworks__figura {
+    margin: 0;
+  }
+
+  .coworks__figura img {
+    border: 2px solid var(--papel);
+  }
+
+  .explora__rejilla {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .explora__tarjeta {
+    position: relative;
+    text-decoration: none;
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    padding: 1.5rem 1.4rem 1.75rem;
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    background: var(--papel);
+    transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease;
+  }
+
+  .explora__tarjeta:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--tinta);
+    background: var(--amarillo);
+  }
+
+  .explora__cifra {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    line-height: 1;
+  }
+
+  .explora__tarjeta p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #45454f;
+  }
+
+  .explora__tarjeta--cerrada {
+    background: #f4f4f6;
+  }
+
+  .explora__candado {
+    margin-top: 0.6rem;
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--tinta);
+    padding: 0.25rem 0.5rem;
+    justify-self: start;
+  }
+
+  .sumarse {
+    background: var(--magenta);
+    border-top: var(--linea);
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+  }
+
+  .sumarse__pasos {
+    list-style: none;
+    margin: 2.5rem 0 3rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .sumarse__pasos li {
+    border-top: var(--linea);
+    padding-top: 1rem;
+  }
+
+  .sumarse__numero {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .sumarse__pasos p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .sumarse__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .sumarse__pie p {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  @media (max-width: 1000px) {
+    .portada__caja,
+    .contexto,
+    .territorio__caja {
+      grid-template-columns: 1fr;
+    }
+
+    .territorio__mapa {
+      max-width: 320px;
+      margin-inline: auto;
+    }
+
+    .cifras__rejilla,
+    .explora__rejilla {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .oferta__rejilla,
+    .sumarse__pasos {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cifras__rejilla,
+    .explora__rejilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

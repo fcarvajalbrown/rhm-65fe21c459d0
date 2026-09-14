@@ -1,0 +1,364 @@
+---
+import Base from "../layouts/Base.astro";
+import MapaChile from "../components/MapaChile.astro";
+import miembros from "../data/miembros.json";
+
+const regiones = [...new Set(miembros.map((m) => m.region))].sort((a, b) => a.localeCompare(b, "es"));
+const tipos = [...new Set(miembros.map((m) => m.tipo))].sort((a, b) => a.localeCompare(b, "es"));
+
+const colorMacrozona = {
+  Norte: "var(--naranja)",
+  Centro: "var(--amarillo)",
+  Metropolitana: "var(--magenta)",
+  Sur: "var(--turquesa)",
+  Austral: "var(--violeta)",
+};
+
+const enlaceInstagram = (handle) =>
+  handle && /^@[A-Za-z0-9._]+$/.test(handle.trim())
+    ? `https://www.instagram.com/${handle.trim().slice(1)}`
+    : null;
+
+const fichas = [...miembros].sort((a, b) => a.organizacion.localeCompare(b.organizacion, "es"));
+---
+
+<Base
+  titulo="Integrantes"
+  descripcion="Las 32 organizaciones municipales que integran la Red Chilena de Hubs Municipales, con su comuna, región, tipo de organización y contraparte."
+>
+  <section class="encabezado">
+    <div class="envoltorio">
+      <p class="rotulo">Quiénes integran la Red</p>
+      <h1>{miembros.length} organizaciones en {regiones.length} regiones</h1>
+      <p class="bajada">
+        Municipalidades, corporaciones, direcciones y programas que abrieron un espacio para el
+        emprendimiento y la innovación en su territorio.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="envoltorio panel__caja">
+      <aside class="panel__mapa">
+        <MapaChile interactivo={true} />
+      </aside>
+
+      <div class="panel__contenido">
+        <form class="filtros" id="filtros">
+          <label class="filtro filtro--busqueda">
+            <span class="visualmente-oculto">Buscar organización o comuna</span>
+            <input type="search" id="busqueda" placeholder="Buscar organización o comuna" autocomplete="off" />
+          </label>
+          <label class="filtro">
+            <span class="visualmente-oculto">Región</span>
+            <select id="region">
+              <option value="">Todas las regiones</option>
+              {regiones.map((region) => <option value={region}>{region}</option>)}
+            </select>
+          </label>
+          <label class="filtro">
+            <span class="visualmente-oculto">Tipo de organización</span>
+            <select id="tipo">
+              <option value="">Todo tipo</option>
+              {tipos.map((tipo) => <option value={tipo}>{tipo}</option>)}
+            </select>
+          </label>
+        </form>
+
+        <p class="conteo" id="conteo" aria-live="polite">{fichas.length} integrantes</p>
+
+        <div class="rejilla" id="rejilla">
+          {
+            fichas.map((miembro) => (
+              <article
+                class="ficha"
+                data-id={miembro.id}
+                data-region={miembro.region}
+                data-tipo={miembro.tipo}
+                data-texto={`${miembro.organizacion} ${miembro.comuna} ${miembro.region}`.toLowerCase()}
+                style={`--color: ${colorMacrozona[miembro.macrozona]}`}
+              >
+                <header class="ficha__cabeza">
+                  <span class="ficha__marca" />
+                  <h2>{miembro.organizacion}</h2>
+                </header>
+                <p class="ficha__lugar">
+                  {miembro.comuna} · Región {miembro.region}
+                </p>
+                <p class="etiqueta ficha__tipo">{miembro.tipo}</p>
+                <dl class="ficha__datos">
+                  <div>
+                    <dt>Dirección</dt>
+                    <dd>{miembro.direccion}</dd>
+                  </div>
+                  {miembro.alcalde && (
+                    <div>
+                      <dt>Alcalde o alcaldesa</dt>
+                      <dd>{miembro.alcalde}</dd>
+                    </div>
+                  )}
+                  {miembro.contraparte && (
+                    <div>
+                      <dt>Contraparte en la Red</dt>
+                      <dd>{miembro.contraparte}</dd>
+                    </div>
+                  )}
+                </dl>
+                {miembro.instagram &&
+                  (enlaceInstagram(miembro.instagram) ? (
+                    <a class="ficha__social" href={enlaceInstagram(miembro.instagram)} rel="noopener">
+                      {miembro.instagram}
+                    </a>
+                  ) : (
+                    <span class="ficha__social ficha__social--plano">{miembro.instagram}</span>
+                  ))}
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="vacio" id="vacio" hidden>Ninguna organización coincide con ese filtro.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const busqueda = document.getElementById("busqueda");
+  const region = document.getElementById("region");
+  const tipo = document.getElementById("tipo");
+  const conteo = document.getElementById("conteo");
+  const vacio = document.getElementById("vacio");
+  const fichas = Array.from(document.querySelectorAll(".ficha"));
+  const nodos = Array.from(document.querySelectorAll(".mapa__nodo"));
+
+  const aplicar = () => {
+    const texto = busqueda.value.trim().toLowerCase();
+    const visibles = new Set();
+
+    fichas.forEach((ficha) => {
+      const coincide =
+        (!texto || ficha.dataset.texto.includes(texto)) &&
+        (!region.value || ficha.dataset.region === region.value) &&
+        (!tipo.value || ficha.dataset.tipo === tipo.value);
+      ficha.hidden = !coincide;
+      if (coincide) visibles.add(ficha.dataset.id);
+    });
+
+    nodos.forEach((nodo) => {
+      nodo.classList.toggle("es-apagado", !visibles.has(nodo.dataset.id));
+    });
+
+    conteo.textContent =
+      visibles.size === 1 ? "1 integrante" : `${visibles.size} integrantes`;
+    vacio.hidden = visibles.size > 0;
+  };
+
+  [busqueda, region, tipo].forEach((control) => {
+    control.addEventListener("input", aplicar);
+  });
+
+  document.getElementById("filtros").addEventListener("submit", (evento) => {
+    evento.preventDefault();
+  });
+
+  const emparejar = (id, activo) => {
+    const ficha = fichas.find((f) => f.dataset.id === id);
+    const nodo = nodos.find((n) => n.dataset.id === id);
+    if (ficha) ficha.classList.toggle("es-destacada", activo);
+    if (nodo) nodo.classList.toggle("es-destacado", activo);
+  };
+
+  fichas.forEach((ficha) => {
+    ficha.addEventListener("mouseenter", () => emparejar(ficha.dataset.id, true));
+    ficha.addEventListener("mouseleave", () => emparejar(ficha.dataset.id, false));
+  });
+
+  nodos.forEach((nodo) => {
+    nodo.addEventListener("mouseenter", () => emparejar(nodo.dataset.id, true));
+    nodo.addEventListener("mouseleave", () => emparejar(nodo.dataset.id, false));
+    nodo.addEventListener("click", () => {
+      const ficha = fichas.find((f) => f.dataset.id === nodo.dataset.id);
+      if (ficha && !ficha.hidden) ficha.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+</script>
+
+<style>
+  .encabezado {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  .panel {
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .panel__caja {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  .panel__mapa {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .filtros {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .filtro input,
+  .filtro select {
+    width: 100%;
+    font: inherit;
+    font-weight: 500;
+    padding: 0.7rem 0.85rem;
+    border: var(--linea);
+    background: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    appearance: none;
+  }
+
+  .filtro select {
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%),
+      linear-gradient(135deg, var(--tinta) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 2.2rem;
+  }
+
+  .conteo {
+    font-family: var(--display);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .ficha {
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.3rem 1.3rem 1.5rem;
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+  }
+
+  .ficha[hidden] {
+    display: none;
+  }
+
+  .ficha:hover,
+  .ficha.es-destacada {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--color);
+  }
+
+  .ficha__cabeza {
+    display: grid;
+    grid-template-columns: 0.85rem 1fr;
+    gap: 0.7rem;
+    align-items: start;
+  }
+
+  .ficha__marca {
+    width: 0.85rem;
+    height: 0.85rem;
+    margin-top: 0.3rem;
+    background: var(--color);
+    border: 1.5px solid var(--tinta);
+  }
+
+  .ficha h2 {
+    font-size: 1.05rem;
+    line-height: 1.15;
+    font-family: var(--display);
+  }
+
+  .ficha__lugar {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .ficha__tipo {
+    margin: 0;
+    justify-self: start;
+    font-size: 0.72rem;
+  }
+
+  .ficha__datos {
+    margin: 0.35rem 0 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .ficha__datos dt {
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .ficha__datos dd {
+    margin: 0.1rem 0 0;
+    font-size: 0.92rem;
+  }
+
+  .ficha__social {
+    justify-self: start;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+    border-bottom: 2px solid var(--color);
+  }
+
+  .ficha__social--plano {
+    border-bottom-style: dotted;
+    color: var(--gris);
+  }
+
+  .vacio {
+    margin-top: 2rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 950px) {
+    .panel__caja {
+      grid-template-columns: 1fr;
+    }
+
+    .panel__mapa {
+      position: static;
+      max-width: 250px;
+      margin-inline: auto;
+    }
+
+    .filtros {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

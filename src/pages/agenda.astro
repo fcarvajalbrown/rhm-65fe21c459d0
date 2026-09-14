@@ -1,0 +1,317 @@
+---
+import Base from "../layouts/Base.astro";
+import { eventos, proximas, anteriores } from "../lib/agenda.js";
+
+const categorias = [...new Set(eventos.map((e) => e.categoria).filter(Boolean))].sort((a, b) =>
+  a.localeCompare(b, "es")
+);
+const modalidades = [...new Set(eventos.map((e) => e.modalidad).filter(Boolean))].sort((a, b) =>
+  a.localeCompare(b, "es")
+);
+
+const colorCategoria = {
+  Evento: "var(--magenta)",
+  Capacitación: "var(--turquesa)",
+  "Reunión Red": "var(--amarillo)",
+  "Mesa Territorial": "var(--violeta)",
+  Otro: "var(--naranja)",
+};
+---
+
+<Base
+  titulo="Agenda de la Red"
+  descripcion="Eventos, capacitaciones, reuniones y mesas territoriales de la Red Chilena de Hubs Municipales."
+>
+  <section class="encabezado">
+    <div class="envoltorio">
+      <p class="rotulo">Agenda de la Red</p>
+      <h1>{proximas.length} actividades próximas</h1>
+      <p class="bajada">
+        {anteriores.length} actividades anteriores desde la reunión anual de mayo. La agenda recoge
+        lo que organiza cada integrante y lo abre al resto de la Red.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="envoltorio">
+      <form class="filtros" id="filtros">
+        <label class="filtro">
+          <span class="visualmente-oculto">Categoría</span>
+          <select id="categoria">
+            <option value="">Todas las categorías</option>
+            {categorias.map((categoria) => <option value={categoria}>{categoria}</option>)}
+          </select>
+        </label>
+        <label class="filtro">
+          <span class="visualmente-oculto">Modalidad</span>
+          <select id="modalidad">
+            <option value="">Toda modalidad</option>
+            {modalidades.map((modalidad) => <option value={modalidad}>{modalidad}</option>)}
+          </select>
+        </label>
+      </form>
+
+      <div class="bloque">
+        <h2 class="bloque__titulo">Próximas actividades</h2>
+        <ul class="lista" id="lista-proximas">
+          {
+            proximas.map((evento) => (
+              <li
+                class="evento"
+                data-categoria={evento.categoria}
+                data-modalidad={evento.modalidad}
+                style={`--color: ${colorCategoria[evento.categoria] || "var(--lila-hondo)"}`}
+              >
+                <div class="evento__fecha">
+                  <span class="evento__dia">{evento.dia}</span>
+                  <span class="evento__mes">{evento.mes}</span>
+                  <span class="evento__anio">{evento.anio}</span>
+                </div>
+                <div class="evento__cuerpo">
+                  <h3>{evento.titulo}</h3>
+                  <p class="evento__meta">
+                    {[evento.categoria, evento.modalidad, evento.horario, evento.organizador]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                  {evento.lugar && <p class="evento__lugar">{evento.lugar}</p>}
+                  {evento.conQuien && <p class="evento__quien">Con: {evento.conQuien}</p>}
+                  {evento.notas && <p class="evento__notas">{evento.notas}</p>}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="vacio" data-vacio="proximas" hidden>No hay actividades próximas con ese filtro.</p>
+      </div>
+
+      <div class="bloque">
+        <h2 class="bloque__titulo bloque__titulo--tenue">Actividades anteriores</h2>
+        <ul class="lista" id="lista-anteriores">
+          {
+            anteriores.map((evento) => (
+              <li
+                class="evento evento--pasado"
+                data-categoria={evento.categoria}
+                data-modalidad={evento.modalidad}
+                style={`--color: ${colorCategoria[evento.categoria] || "var(--lila-hondo)"}`}
+              >
+                <div class="evento__fecha">
+                  <span class="evento__dia">{evento.dia}</span>
+                  <span class="evento__mes">{evento.mes}</span>
+                  <span class="evento__anio">{evento.anio}</span>
+                </div>
+                <div class="evento__cuerpo">
+                  <h3>
+                    {evento.titulo}
+                    {evento.estado !== "Realizada" && (
+                      <span class="evento__estado">{evento.estado}</span>
+                    )}
+                  </h3>
+                  <p class="evento__meta">
+                    {[evento.categoria, evento.modalidad, evento.horario, evento.organizador]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                  {evento.lugar && <p class="evento__lugar">{evento.lugar}</p>}
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="vacio" data-vacio="anteriores" hidden>No hay actividades anteriores con ese filtro.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const categoria = document.getElementById("categoria");
+  const modalidad = document.getElementById("modalidad");
+  const listas = {
+    proximas: document.getElementById("lista-proximas"),
+    anteriores: document.getElementById("lista-anteriores"),
+  };
+
+  const aplicar = () => {
+    Object.entries(listas).forEach(([clave, lista]) => {
+      let visibles = 0;
+      lista.querySelectorAll(".evento").forEach((evento) => {
+        const coincide =
+          (!categoria.value || evento.dataset.categoria === categoria.value) &&
+          (!modalidad.value || evento.dataset.modalidad === modalidad.value);
+        evento.hidden = !coincide;
+        if (coincide) visibles += 1;
+      });
+      document.querySelector(`[data-vacio="${clave}"]`).hidden = visibles > 0;
+    });
+  };
+
+  [categoria, modalidad].forEach((control) => control.addEventListener("change", aplicar));
+  document.getElementById("filtros").addEventListener("submit", (evento) => evento.preventDefault());
+</script>
+
+<style>
+  .encabezado {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .filtro select {
+    font: inherit;
+    font-weight: 500;
+    padding: 0.7rem 2.2rem 0.7rem 0.85rem;
+    border: var(--linea);
+    background-color: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%),
+      linear-gradient(135deg, var(--tinta) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .bloque + .bloque {
+    margin-top: 3.5rem;
+  }
+
+  .bloque__titulo {
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    padding-bottom: 0.75rem;
+    border-bottom: var(--linea);
+    margin-bottom: 1.5rem;
+  }
+
+  .bloque__titulo--tenue {
+    color: var(--gris);
+    border-bottom-color: var(--gris);
+  }
+
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .evento {
+    display: grid;
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    gap: 1.25rem;
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.1rem 1.3rem;
+  }
+
+  .evento[hidden] {
+    display: none;
+  }
+
+  .evento__fecha {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    padding: 0.6rem 0.3rem;
+    background: var(--color);
+    border: 1.5px solid var(--tinta);
+  }
+
+  .evento__dia {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .evento__mes {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .evento__anio {
+    font-size: 0.72rem;
+    color: rgba(12, 12, 14, 0.7);
+  }
+
+  .evento__cuerpo h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .evento__cuerpo p {
+    margin: 0 0 0.2rem;
+  }
+
+  .evento__meta {
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .evento__lugar,
+  .evento__quien {
+    font-size: 0.88rem;
+    color: var(--gris);
+  }
+
+  .evento__notas {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    border-left: 4px solid var(--color);
+    padding-left: 0.8rem;
+  }
+
+  .evento--pasado {
+    box-shadow: none;
+    background: #fbfbfc;
+  }
+
+  .evento--pasado .evento__fecha {
+    background: var(--papel);
+    color: var(--gris);
+  }
+
+  .evento__estado {
+    font-family: var(--texto);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--gris);
+    color: var(--gris);
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .vacio {
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 560px) {
+    .evento {
+      grid-template-columns: 4.2rem minmax(0, 1fr);
+      gap: 0.9rem;
+      padding: 0.9rem 1rem;
+    }
+  }
+</style>

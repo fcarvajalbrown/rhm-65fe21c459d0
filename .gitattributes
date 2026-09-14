@@ -1,0 +1,26 @@
+* text=auto eol=lf
+
+*.astro text
+*.css text
+*.js text
+*.mjs text
+*.json text
+*.geojson text
+*.md text
+*.py text
+*.svg text
+*.yml text
+*.yaml text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.xlsx binary
+
+src/data/*.json linguist-generated=true
+data/chile-adm0.geojson linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+
+*.astro linguist-language=Astro

@@ -1,0 +1,123 @@
+---
+import mapa from "../data/mapa.json";
+import miembros from "../data/miembros.json";
+
+const { interactivo = false } = Astro.props;
+
+const colorMacrozona = {
+  Norte: "var(--naranja)",
+  Centro: "var(--amarillo)",
+  Metropolitana: "var(--magenta)",
+  Sur: "var(--turquesa)",
+  Austral: "var(--violeta)",
+};
+
+const porId = new Map(miembros.map((m) => [m.id, m]));
+const nodos = mapa.nodos.map((nodo, indice) => {
+  const miembro = porId.get(nodo.id);
+  return {
+    ...nodo,
+    indice,
+    organizacion: miembro.organizacion,
+    comuna: miembro.comuna,
+    region: miembro.region,
+    macrozona: miembro.macrozona,
+    color: colorMacrozona[miembro.macrozona],
+  };
+});
+---
+
+<figure class:list={["mapa", { "mapa--interactivo": interactivo }]}>
+  <svg
+    viewBox={`-14 -14 ${mapa.width + 28} ${mapa.height + 28}`}
+    role="img"
+    aria-label={`Mapa de Chile con ${nodos.length} organizaciones de la Red`}
+  >
+    <g class="mapa__tierra">
+      {mapa.paths.map((d) => <path d={d} />)}
+    </g>
+    <g class="mapa__nodos">
+      {
+        nodos.map((nodo) => (
+          <g
+            class="mapa__nodo"
+            data-id={nodo.id}
+            data-macrozona={nodo.macrozona}
+            style={`--color: ${nodo.color}; --retardo: ${nodo.indice * 45}ms`}
+          >
+            <circle class="mapa__halo" cx={nodo.x} cy={nodo.y} r="9" />
+            <circle class="mapa__punto" cx={nodo.x} cy={nodo.y} r="4.2" />
+            <title>{`${nodo.organizacion} — ${nodo.comuna}, ${nodo.region}`}</title>
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .mapa {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mapa svg {
+    width: 100%;
+    height: auto;
+    max-height: 78vh;
+    overflow: visible;
+  }
+
+  .mapa__tierra path {
+    fill: var(--lila);
+    stroke: var(--tinta);
+    stroke-width: 1.1;
+    stroke-linejoin: round;
+  }
+
+  .mapa__punto {
+    fill: var(--color);
+    stroke: var(--tinta);
+    stroke-width: 1.4;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: brotar 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    animation-delay: var(--retardo);
+  }
+
+  .mapa__halo {
+    fill: var(--color);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.4);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  .mapa__nodo:hover .mapa__halo,
+  .mapa__nodo.es-destacado .mapa__halo {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  .mapa--interactivo .mapa__nodo {
+    cursor: pointer;
+  }
+
+  .mapa--interactivo .mapa__nodo.es-apagado .mapa__punto {
+    fill: var(--papel);
+    opacity: 0.5;
+  }
+
+  @keyframes brotar {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+</style>

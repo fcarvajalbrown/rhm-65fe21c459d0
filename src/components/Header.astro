@@ -1,0 +1,136 @@
+---
+import { url, esActiva } from "../lib/rutas.js";
+
+const actual = Astro.url.pathname;
+const enlaces = [
+  { href: "/", texto: "Inicio" },
+  { href: "/integrantes", texto: "Integrantes" },
+  { href: "/agenda", texto: "Agenda de la Red" },
+  { href: "/startups", texto: "Startups" },
+];
+---
+
+<header class="cabecera">
+  <div class="envoltorio cabecera__caja">
+    <a class="cabecera__marca" href={url("/")}>
+      <img src={url("/img/logo-red-hubs.png")} alt="Red Chilena de Hubs Municipales" width="601" height="121" />
+    </a>
+
+    <input class="cabecera__interruptor" type="checkbox" id="menu" />
+    <label class="cabecera__hamburguesa" for="menu">
+      <span></span><span></span><span></span>
+      <span class="visualmente-oculto">Abrir menú</span>
+    </label>
+
+    <nav class="cabecera__nav" aria-label="Principal">
+      {
+        enlaces.map((enlace) => (
+          <a
+            href={url(enlace.href)}
+            class:list={["cabecera__enlace", { "es-activo": esActiva(actual, enlace.href) }]}
+            aria-current={esActiva(actual, enlace.href) ? "page" : undefined}
+          >
+            {enlace.texto}
+          </a>
+        ))
+      }
+      <a class="boton boton--magenta cabecera__acceso" href={url("/acceso")}>Acceso miembros</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--papel);
+    border-bottom: var(--linea);
+  }
+
+  .cabecera__caja {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 4.75rem;
+  }
+
+  .cabecera__marca img {
+    height: 2.1rem;
+    width: auto;
+  }
+
+  .cabecera__nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  .cabecera__enlace {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.98rem;
+    padding-block: 0.35rem;
+    border-bottom: 3px solid transparent;
+  }
+
+  .cabecera__enlace:hover {
+    border-bottom-color: var(--magenta);
+  }
+
+  .cabecera__enlace.es-activo {
+    border-bottom-color: var(--tinta);
+  }
+
+  .cabecera__acceso {
+    padding: 0.6rem 1.1rem;
+    font-size: 0.82rem;
+  }
+
+  .cabecera__interruptor,
+  .cabecera__hamburguesa {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .cabecera__hamburguesa {
+      display: grid;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .cabecera__hamburguesa span:not(.visualmente-oculto) {
+      display: block;
+      width: 26px;
+      height: 3px;
+      background: var(--tinta);
+    }
+
+    .cabecera__nav {
+      display: none;
+      position: absolute;
+      inset: 100% 0 auto 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      padding: 1.25rem 1.5rem 1.75rem;
+      background: var(--papel);
+      border-bottom: var(--linea);
+    }
+
+    .cabecera__interruptor:checked ~ .cabecera__nav {
+      display: flex;
+    }
+
+    .cabecera__enlace {
+      font-size: 1.1rem;
+      padding-block: 0.55rem;
+    }
+
+    .cabecera__acceso {
+      margin-top: 0.75rem;
+    }
+  }
+</style>

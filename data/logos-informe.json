@@ -1,0 +1,340 @@
+{
+  "hub-providencia": {
+    "organizacion": "HUB Providencia",
+    "estado": "ok",
+    "origen": "https://providencia.cl/provi/img/logo-septiembre-02.png",
+    "archivo": "hub-providencia.png",
+    "tamano": [
+      4500,
+      1699
+    ],
+    "puntos": 39,
+    "claro": true
+  },
+  "hub-vitacura": {
+    "organizacion": "HUB Vitacura",
+    "estado": "ok",
+    "origen": "https://vitacura.cl/app/themes/vitacura-sage/public/images/logos-vitacura_sineslogan_hor.36ae38.png",
+    "archivo": "hub-vitacura.png",
+    "tamano": [
+      402,
+      145
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "corporacion-yunus": {
+    "organizacion": "Corporación Yunus",
+    "estado": "ok",
+    "origen": "https://www.penalolen.cl/social/logo.png",
+    "archivo": "corporacion-yunus.png",
+    "tamano": [
+      242,
+      64
+    ],
+    "puntos": 54,
+    "claro": false
+  },
+  "municipalidad-de-lo-barnechea": {
+    "organizacion": "Municipalidad de Lo Barnechea",
+    "estado": "ok",
+    "origen": "https://lobarnechea.cl/wp-content/uploads/2023/11/cropped-LB-logo-1-1-180x180.png",
+    "archivo": "municipalidad-de-lo-barnechea.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 79,
+    "claro": false
+  },
+  "corporacion-de-fomento-la-florida": {
+    "organizacion": "Corporación de Fomento La Florida",
+    "estado": "sin-logo",
+    "origen": null
+  },
+  "corporacion-municipal-de-innovacion-y-desarrollo-municipalidad-de-independencia": {
+    "organizacion": "Corporación Municipal de Innovación y Desarrollo Municipalidad de Independencia",
+    "estado": "sin-logo",
+    "origen": null
+  },
+  "hub-stgo": {
+    "organizacion": "HUB STGO",
+    "estado": "ok",
+    "origen": "https://santiagoinnova.com/wp-content/uploads/2025/09/Logo_Stgo_Innova_Hub_transparente_7-copia-23-scaled.jpg",
+    "archivo": "hub-stgo.jpeg",
+    "tamano": [
+      2027,
+      2560
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "hub-de-emprendimiento-nunoa": {
+    "organizacion": "HUB de emprendimiento Ñuñoa",
+    "estado": "ok",
+    "origen": "https://www.nunoa.cl/app/uploads/2025/03/logo-nunoa_amarillo.svg",
+    "archivo": "hub-de-emprendimiento-nunoa.svg",
+    "tamano": null,
+    "puntos": 75,
+    "claro": false
+  },
+  "colina-emprende": {
+    "organizacion": "Colina emprende",
+    "estado": "sitio-inaccesible (URLError)",
+    "origen": null
+  },
+  "municipalidad-de-san-bernardo": {
+    "organizacion": "Municipalidad de San Bernardo",
+    "estado": "ok",
+    "origen": "https://www.sanbernardo.cl/wp-content/uploads/2025/06/cropped-logo-escudo-sb-180x180.png",
+    "archivo": "municipalidad-de-san-bernardo.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 114,
+    "claro": false
+  },
+  "red-la-reina": {
+    "organizacion": "Red La Reina",
+    "estado": "ok",
+    "origen": "https://lareina.cl/wp-content/uploads/2020/06/cropped-escudo-ini-180x180.png",
+    "archivo": "red-la-reina.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 69,
+    "claro": false
+  },
+  "corporacion-huechuraba": {
+    "organizacion": "Corporación Huechuraba",
+    "estado": "ok",
+    "origen": "https://huechuraba.cl/images/Logo-Huechuraba-v3.svg",
+    "archivo": "corporacion-huechuraba.svg",
+    "tamano": null,
+    "puntos": 75,
+    "claro": false
+  },
+  "municipalidad-de-las-condes": {
+    "organizacion": "Municipalidad de Las Condes",
+    "estado": "ok",
+    "origen": "https://www.lascondes.cl/wp-content/uploads/2026/08/logo-tarjeta-vecino.svg",
+    "archivo": "municipalidad-de-las-condes.svg",
+    "tamano": null,
+    "puntos": 75,
+    "claro": false
+  },
+  "temuco-lab": {
+    "organizacion": "Temuco Lab",
+    "estado": "ok",
+    "origen": "https://www.temuco.cl/wp-content/uploads/2022/02/Logo-mun-tco-w500-300x195.png",
+    "archivo": "temuco-lab.webp",
+    "tamano": [
+      300,
+      195
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "municipalidad-de-puerto-montt": {
+    "organizacion": "Municipalidad de Puerto Montt",
+    "estado": "ok",
+    "origen": "https://www.puertomontt.cl/wp-content/uploads/2021/04/isotipo_pto-montt_morado.svg",
+    "archivo": "municipalidad-de-puerto-montt.svg",
+    "tamano": null,
+    "puntos": 69,
+    "claro": false
+  },
+  "municipalidad-el-quisco": {
+    "organizacion": "Municipalidad El Quisco",
+    "estado": "ok",
+    "origen": "https://www.elquisco.cl/wp-content/uploads/2026/08/70ANOSLOGO70anos-300x161.png",
+    "archivo": "municipalidad-el-quisco.png",
+    "tamano": [
+      300,
+      161
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "hub-santo-domingo": {
+    "organizacion": "HUB Santo Domingo",
+    "estado": "ok",
+    "origen": "https://santodomingo.cl/wp-content/uploads/2025/10/cropped-logo-gob.png-180x180.png",
+    "archivo": "hub-santo-domingo.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 79,
+    "claro": false
+  },
+  "municipalidad-yerbas-buenas": {
+    "organizacion": "Municipalidad Yerbas Buenas",
+    "estado": "ok",
+    "origen": "https://www.muniyerbasbuenas.cl/assets/logo.png",
+    "archivo": "municipalidad-yerbas-buenas.png",
+    "tamano": [
+      413,
+      605
+    ],
+    "puntos": 56,
+    "claro": false
+  },
+  "municipalidad-de-san-clemente": {
+    "organizacion": "Municipalidad de San Clemente",
+    "estado": "ok",
+    "origen": "https://www.sanclemente.cl/wp-content/uploads/2022/02/cropped-logotr5.png",
+    "archivo": "municipalidad-de-san-clemente.png",
+    "tamano": [
+      512,
+      512
+    ],
+    "puntos": 65,
+    "claro": false
+  },
+  "innova-vina": {
+    "organizacion": "Innova Viña",
+    "estado": "ok",
+    "origen": "https://innovavina.cl/wp-content/uploads/2023/12/cropped-favico-innovavina-180x180.webp",
+    "archivo": "innova-vina.webp",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 34,
+    "claro": false
+  },
+  "municipalidad-de-la-union": {
+    "organizacion": "Municipalidad de la Unión",
+    "estado": "ok",
+    "origen": "https://static.wixstatic.com/media/7aa4ab_1cd6f11111d44e53b8070cdbfdd1d9f0%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/7aa4ab_1cd6f11111d44e53b8070cdbfdd1d9f0%7Emv2.png",
+    "archivo": "municipalidad-de-la-union.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 34,
+    "claro": false
+  },
+  "municipalidad-de-cerrillos": {
+    "organizacion": "Municipalidad de Cerrillos",
+    "estado": "ok",
+    "origen": "https://agenda.municerrillos.cl/uploads/logo-publico.png",
+    "archivo": "municipalidad-de-cerrillos.png",
+    "tamano": [
+      345,
+      105
+    ],
+    "puntos": 54,
+    "claro": false
+  },
+  "hub-municipalidad-de-la-serena": {
+    "organizacion": "HUB Municipalidad de La Serena",
+    "estado": "ok",
+    "origen": "https://framework.laserena.cl/img/favicon.svg",
+    "archivo": "hub-municipalidad-de-la-serena.svg",
+    "tamano": null,
+    "puntos": 34,
+    "claro": false
+  },
+  "municipalidad-de-antofagasta": {
+    "organizacion": "Municipalidad de Antofagasta",
+    "estado": "ok",
+    "origen": "https://municipalidaddeantofagasta.cl/images/logos/cop_cultural.jpg",
+    "archivo": "municipalidad-de-antofagasta.jpeg",
+    "tamano": [
+      183,
+      169
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "municipalidad-de-san-miguel": {
+    "organizacion": "Municipalidad de San Miguel",
+    "estado": "sin-logo",
+    "origen": null
+  },
+  "la-fabrica": {
+    "organizacion": "La Fábrica",
+    "estado": "ok",
+    "origen": "https://storage.googleapis.com/wordpress-transparencia/logo_renca.png",
+    "archivo": "la-fabrica.png",
+    "tamano": [
+      1182,
+      467
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "municipalidad-de-la-cisterna": {
+    "organizacion": "Municipalidad de La Cisterna",
+    "estado": "ok",
+    "origen": "https://cisterna.cl/icon.png?icon.0ue3da3cpx1zh.png",
+    "archivo": "municipalidad-de-la-cisterna.png",
+    "tamano": [
+      250,
+      250
+    ],
+    "puntos": 20,
+    "claro": false
+  },
+  "hub-met": {
+    "organizacion": "HUB Met",
+    "estado": "ok",
+    "origen": "https://hubmetropolitano.cl/wp-content/uploads/2026/07/Logos-Alianzas-Hub-Metropolitano-06-1.webp",
+    "archivo": "hub-met.webp",
+    "tamano": [
+      500,
+      500
+    ],
+    "puntos": 39,
+    "claro": true
+  },
+  "municipalidad-calera-de-tango": {
+    "organizacion": "Municipalidad Calera de Tango",
+    "estado": "ok",
+    "origen": "https://static.wixstatic.com/media/0c33ad_61abbd9efe6649a6840571be86d80744%7Emv2.png/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/0c33ad_61abbd9efe6649a6840571be86d80744%7Emv2.png",
+    "archivo": "municipalidad-calera-de-tango.png",
+    "tamano": [
+      180,
+      180
+    ],
+    "puntos": 34,
+    "claro": true
+  },
+  "centro-ideactiva": {
+    "organizacion": "Centro IDEACTIVA",
+    "estado": "ok",
+    "origen": "https://www.centroideactiva.cl/wp-content/uploads/2023/10/logoweb.png",
+    "archivo": "centro-ideactiva.png",
+    "tamano": [
+      434,
+      234
+    ],
+    "puntos": 61,
+    "claro": false
+  },
+  "corporacion-regional-de-desarrollo-productivo-los-rios": {
+    "organizacion": "Corporación Regional de Desarrollo Productivo Los Ríos",
+    "estado": "ok",
+    "origen": "https://corporacionlosrios.cl/wp-content/uploads/2025/03/logo-v2.svg",
+    "archivo": "corporacion-regional-de-desarrollo-productivo-los-rios.svg",
+    "tamano": null,
+    "puntos": 75,
+    "claro": false
+  },
+  "municipalidad-punta-arenas": {
+    "organizacion": "Municipalidad Punta Arenas",
+    "estado": "ok",
+    "origen": "https://media.puntaarenas.cl/uploads/media/imagenes/2021/11/logo-color.png",
+    "archivo": "municipalidad-punta-arenas.png",
+    "tamano": [
+      675,
+      275
+    ],
+    "puntos": 34,
+    "claro": true
+  }
+}

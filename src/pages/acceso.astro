@@ -1,0 +1,294 @@
+---
+import Base from "../layouts/Base.astro";
+import practicas from "../data/buenas-practicas.json";
+import miembros from "../data/miembros.json";
+
+const areas = [...new Set(practicas.map((p) => p.area))].sort((a, b) => a.localeCompare(b, "es"));
+
+const pasos = [
+  {
+    numero: "01",
+    texto: "Responder la encuesta de diagnóstico anual de la Red.",
+  },
+  {
+    numero: "02",
+    texto: "Firmar el Cartel de la Red en un hito realizado en HUB Providencia.",
+  },
+  {
+    numero: "03",
+    texto: "Firmar convenio de colaboración con la Municipalidad de Providencia.",
+  },
+];
+
+const privado = [
+  {
+    titulo: "Repositorio de buenas prácticas",
+    texto: `${practicas.length} metodologías y aprendizajes documentados por los integrantes, con su contacto de consulta y documentación de respaldo.`,
+    color: "var(--turquesa)",
+  },
+  {
+    titulo: "Contrapartes y correos directos",
+    texto: `Datos de contacto de la contraparte y del funcionario suplente de cada una de las ${miembros.length} organizaciones.`,
+    color: "var(--amarillo)",
+  },
+  {
+    titulo: "Carga y edición de la base",
+    texto: "Alta de integrantes, actividades de la agenda y startups del repositorio por parte de cada hub.",
+    color: "var(--magenta)",
+  },
+];
+---
+
+<Base
+  titulo="Acceso miembros"
+  descripcion="Área privada de la Red Chilena de Hubs Municipales: buenas prácticas, contactos directos y edición de la base, reservada a las organizaciones integrantes."
+>
+  <section class="encabezado">
+    <div class="envoltorio encabezado__caja">
+      <div>
+        <p class="rotulo">Área privada</p>
+        <h1>El trabajo interno de la Red</h1>
+        <p class="bajada">
+          Parte del material de la Red circula solo entre sus integrantes. Si tu organización ya es
+          miembro, la coordinación entrega las credenciales de acceso.
+        </p>
+      </div>
+      <div class="candado" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="presentation">
+          <rect x="12" y="28" width="40" height="28" rx="2" />
+          <path d="M22 28v-8a10 10 0 0 1 20 0v8" />
+          <circle cx="32" cy="41" r="3.4" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="envoltorio">
+      <p class="rotulo">Qué hay dentro</p>
+      <div class="rejilla">
+        {
+          privado.map((item) => (
+            <article class="reservado" style={`--color: ${item.color}`}>
+              <h2>{item.titulo}</h2>
+              <p>{item.texto}</p>
+              <span class="reservado__sello">Reservado</span>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="areas">
+        <h2 class="areas__titulo">Áreas cubiertas por el repositorio de buenas prácticas</h2>
+        <ul>
+          {areas.map((area) => <li>{area}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion sumarse">
+    <div class="envoltorio">
+      <h2>¿Todavía no son parte?</h2>
+      <p class="bajada">Incorporarse a la Red tiene tres pasos.</p>
+      <ol class="pasos">
+        {
+          pasos.map((paso) => (
+            <li>
+              <span class="pasos__numero">{paso.numero}</span>
+              <p>{paso.texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="contacto">
+        <p class="contacto__nombre">Luis Felipe Valenzuela</p>
+        <p class="contacto__cargo">Coordinador de la Red de Hubs</p>
+        <a
+          class="boton"
+          href="https://providencia.cl/provi/comunidad/hub-providencia/red-de-hubs/red-chilena-hubs-municipales"
+          rel="noopener"
+        >
+          Escribir a la coordinación
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .encabezado {
+    background: var(--tinta);
+    color: var(--papel);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .encabezado__caja {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  .encabezado .bajada {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .encabezado .rotulo::before {
+    background: var(--amarillo);
+  }
+
+  .candado svg {
+    width: clamp(90px, 12vw, 150px);
+    height: auto;
+    fill: none;
+    stroke: var(--amarillo);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .rejilla {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .reservado {
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    padding: 1.6rem;
+    display: grid;
+    align-content: start;
+    gap: 0.7rem;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--papel),
+      var(--papel) 12px,
+      #fafafb 12px,
+      #fafafb 24px
+    );
+  }
+
+  .reservado h2 {
+    font-size: 1.08rem;
+    line-height: 1.15;
+  }
+
+  .reservado p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #3a3a42;
+  }
+
+  .reservado__sello {
+    justify-self: start;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--color);
+    border: 1.5px solid var(--tinta);
+    padding: 0.25rem 0.6rem;
+  }
+
+  .areas {
+    margin-top: 3rem;
+    border-top: var(--linea);
+    padding-top: 1.75rem;
+  }
+
+  .areas__titulo {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .areas ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .areas li {
+    border: 1.5px solid var(--tinta);
+    padding: 0.35rem 0.8rem;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  .sumarse {
+    background: var(--lila);
+    border-top: var(--linea);
+  }
+
+  .pasos {
+    list-style: none;
+    margin: 2.5rem 0 3rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .pasos li {
+    border-top: var(--linea);
+    padding-top: 1rem;
+  }
+
+  .pasos__numero {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--magenta);
+    -webkit-text-stroke: 1.5px var(--tinta);
+    paint-order: stroke fill;
+  }
+
+  .pasos p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .contacto {
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    background: var(--papel);
+    padding: 1.75rem;
+    display: grid;
+    gap: 0.2rem;
+    justify-items: start;
+    max-width: 34rem;
+  }
+
+  .contacto__nombre {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .contacto__cargo {
+    margin: 0 0 1.1rem;
+    color: var(--gris);
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .encabezado__caja,
+    .rejilla,
+    .pasos {
+      grid-template-columns: 1fr;
+    }
+
+    .candado {
+      justify-self: start;
+    }
+  }
+</style>

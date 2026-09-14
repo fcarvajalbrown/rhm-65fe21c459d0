@@ -1,0 +1,57 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { url } from "../lib/rutas.js";
+import "../styles/global.css";
+
+const { titulo, descripcion } = Astro.props;
+const tituloCompleto = titulo
+  ? `${titulo} — Red Chilena de Hubs Municipales`
+  : "Red Chilena de Hubs Municipales";
+---
+
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="icon" type="image/png" href={url("/img/favicon.png")} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Familjen+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <style>
+      .saltar {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--tinta);
+        color: var(--papel);
+        padding: 0.75rem 1.25rem;
+        font-family: var(--display);
+        z-index: 99;
+      }
+
+      .saltar:focus {
+        left: 1rem;
+        top: 1rem;
+      }
+    </style>
+  </body>
+</html>

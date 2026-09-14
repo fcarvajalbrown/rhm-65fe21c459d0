@@ -1,0 +1,324 @@
+---
+import Base from "../layouts/Base.astro";
+import startups from "../data/startups.json";
+
+const normalizar = (valor) => valor.replace(/\s+/g, " ").trim();
+
+const tematicas = [...new Set(startups.flatMap((s) => s.tematicas).map(normalizar))].sort((a, b) =>
+  a.localeCompare(b, "es")
+);
+const programas = [...new Set(startups.flatMap((s) => s.programas).map(normalizar))].sort((a, b) =>
+  a.localeCompare(b, "es")
+);
+
+const colorTematica = {
+  Sustentabilidad: "var(--turquesa)",
+  Tecnología: "var(--violeta)",
+  "Transformación digital": "var(--magenta)",
+  Smartcity: "var(--amarillo)",
+  Salud: "var(--naranja)",
+  Seguridad: "var(--amarillo)",
+  Bienestar: "var(--turquesa)",
+  "Adulto mayor": "var(--violeta)",
+};
+
+const fichas = [...startups].sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+const dominio = (url) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
+---
+
+<Base
+  titulo="Repositorio de startups"
+  descripcion="Las 43 startups vinculadas a la Red Chilena de Hubs Municipales a través de pilotajes, residencias, Govtech Lab y el repositorio."
+>
+  <section class="encabezado">
+    <div class="envoltorio">
+      <p class="rotulo">Repositorio</p>
+      <h1>{startups.length} startups vinculadas a la Red</h1>
+      <p class="bajada">
+        Soluciones que pasaron por pilotajes, residencias, el Govtech Lab o el repositorio de los
+        hubs de la Red. Cada ficha indica su temática y el programa municipal por el que entró.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="envoltorio">
+      <form class="filtros" id="filtros">
+        <label class="filtro filtro--busqueda">
+          <span class="visualmente-oculto">Buscar por nombre o descripción</span>
+          <input type="search" id="busqueda" placeholder="Buscar por nombre o descripción" autocomplete="off" />
+        </label>
+        <label class="filtro">
+          <span class="visualmente-oculto">Temática</span>
+          <select id="tematica">
+            <option value="">Todas las temáticas</option>
+            {tematicas.map((tematica) => <option value={tematica}>{tematica}</option>)}
+          </select>
+        </label>
+      </form>
+
+      <div class="programas" role="group" aria-label="Programa municipal">
+        <span class="programas__titulo">Programa municipal</span>
+        {
+          programas.map((programa) => (
+            <button class="programas__chip" type="button" data-programa={programa}>
+              {programa}
+            </button>
+          ))
+        }
+      </div>
+
+      <p class="conteo" id="conteo" aria-live="polite">{fichas.length} startups</p>
+
+      <div class="rejilla" id="rejilla">
+        {
+          fichas.map((startup) => (
+            <article
+              class="startup"
+              data-tematicas={startup.tematicas.map(normalizar).join("|")}
+              data-programas={startup.programas.map(normalizar).join("|")}
+              data-texto={`${startup.nombre} ${startup.descripcion || ""}`.toLowerCase()}
+            >
+              <h2>{startup.nombre}</h2>
+              <div class="startup__etiquetas">
+                {startup.tematicas.map((tematica) => (
+                  <span
+                    class="etiqueta"
+                    style={`background: ${colorTematica[normalizar(tematica)] || "var(--lila-hondo)"}`}
+                  >
+                    {normalizar(tematica)}
+                  </span>
+                ))}
+                {startup.programas.map((programa) => (
+                  <span class="etiqueta etiqueta--programa">{normalizar(programa)}</span>
+                ))}
+              </div>
+              {startup.descripcion && <p class="startup__texto">{startup.descripcion}</p>}
+              {startup.sitio && (
+                <a class="startup__enlace" href={startup.sitio} rel="noopener">
+                  {dominio(startup.sitio)}
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="vacio" id="vacio" hidden>Ninguna startup coincide con esa búsqueda.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const busqueda = document.getElementById("busqueda");
+  const tematica = document.getElementById("tematica");
+  const conteo = document.getElementById("conteo");
+  const vacio = document.getElementById("vacio");
+  const fichas = Array.from(document.querySelectorAll(".startup"));
+  const chips = Array.from(document.querySelectorAll(".programas__chip"));
+  const activos = new Set();
+
+  const aplicar = () => {
+    const texto = busqueda.value.trim().toLowerCase();
+    let visibles = 0;
+
+    fichas.forEach((ficha) => {
+      const suyas = ficha.dataset.tematicas.split("|").filter(Boolean);
+      const programas = ficha.dataset.programas.split("|").filter(Boolean);
+      const coincide =
+        (!texto || ficha.dataset.texto.includes(texto)) &&
+        (!tematica.value || suyas.includes(tematica.value)) &&
+        (activos.size === 0 || programas.some((p) => activos.has(p)));
+      ficha.hidden = !coincide;
+      if (coincide) visibles += 1;
+    });
+
+    conteo.textContent = visibles === 1 ? "1 startup" : `${visibles} startups`;
+    vacio.hidden = visibles > 0;
+  };
+
+  busqueda.addEventListener("input", aplicar);
+  tematica.addEventListener("change", aplicar);
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const programa = chip.dataset.programa;
+      if (activos.has(programa)) {
+        activos.delete(programa);
+      } else {
+        activos.add(programa);
+      }
+      chip.classList.toggle("es-activo", activos.has(programa));
+      chip.setAttribute("aria-pressed", String(activos.has(programa)));
+      aplicar();
+    });
+    chip.setAttribute("aria-pressed", "false");
+  });
+
+  document.getElementById("filtros").addEventListener("submit", (evento) => evento.preventDefault());
+</script>
+
+<style>
+  .encabezado {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2rem, 4.6vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  .filtros {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filtro input,
+  .filtro select {
+    width: 100%;
+    font: inherit;
+    font-weight: 500;
+    padding: 0.75rem 0.9rem;
+    border: var(--linea);
+    background-color: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    appearance: none;
+  }
+
+  .filtro select {
+    padding-right: 2.2rem;
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%),
+      linear-gradient(135deg, var(--tinta) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .programas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0 1.5rem;
+  }
+
+  .programas__titulo {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+  }
+
+  .programas__chip {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.9rem;
+    border: var(--linea);
+    background: var(--papel);
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .programas__chip:hover {
+    background: var(--lila);
+  }
+
+  .programas__chip.es-activo {
+    background: var(--tinta);
+    color: var(--papel);
+  }
+
+  .conteo {
+    font-family: var(--display);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .startup {
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.4rem;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+  }
+
+  .startup[hidden] {
+    display: none;
+  }
+
+  .startup:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--tinta);
+  }
+
+  .startup h2 {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    line-height: 1.1;
+  }
+
+  .startup__etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .etiqueta--programa {
+    background: var(--papel);
+    border-style: dashed;
+  }
+
+  .startup__texto {
+    margin: 0;
+    font-size: 0.93rem;
+    color: #3a3a42;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .startup__enlace {
+    justify-self: start;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+    border-bottom: 2px solid var(--magenta);
+    word-break: break-all;
+  }
+
+  .vacio {
+    margin-top: 2rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 700px) {
+    .filtros {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
