@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import practicas from "../data/buenas-practicas.json";
 import miembros from "../data/miembros.json";
+import { coordinacion, enlaceCorreo } from "../lib/contacto.js";
 
 const areas = [...new Set(practicas.map((p) => p.area))].sort((a, b) => a.localeCompare(b, "es"));
 
@@ -102,15 +103,12 @@ const privado = [
         }
       </ol>
       <div class="contacto">
-        <p class="contacto__nombre">Luis Felipe Valenzuela</p>
-        <p class="contacto__cargo">Coordinador de la Red de Hubs</p>
-        <a
-          class="boton"
-          href="https://providencia.cl/provi/comunidad/hub-providencia/red-de-hubs/red-chilena-hubs-municipales"
-          rel="noopener"
-        >
+        <p class="contacto__nombre">{coordinacion.nombre}</p>
+        <p class="contacto__cargo">{coordinacion.cargo}</p>
+        <a class="boton" href={enlaceCorreo("Solicitud de acceso a la Red de Hubs")}>
           Escribir a la coordinación
         </a>
+        <p class="contacto__correo">{coordinacion.correo}</p>
       </div>
     </div>
   </section>
@@ -278,6 +276,12 @@ const privado = [
     margin: 0 0 1.1rem;
     color: var(--gris);
     font-weight: 600;
+  }
+
+  .contacto__correo {
+    margin: 0.9rem 0 0;
+    font-size: 0.92rem;
+    color: var(--gris);
   }
 
   @media (max-width: 900px) {

@@ -6,6 +6,7 @@ import startups from "../data/startups.json";
 import practicas from "../data/buenas-practicas.json";
 import { proximas } from "../lib/agenda.js";
 import { url } from "../lib/rutas.js";
+import { coordinacion, enlaceCorreo } from "../lib/contacto.js";
 
 const regiones = [...new Set(miembros.map((m) => m.region))];
 const COWORKS = 4;
@@ -257,8 +258,10 @@ const pasos = [
         }
       </ol>
       <div class="sumarse__pie">
-        <a class="boton" href={url("/acceso")}>Contactar a la coordinación</a>
-        <p>Luis Felipe Valenzuela, Coordinador de la Red de Hubs.</p>
+        <a class="boton" href={enlaceCorreo("Quiero integrar la Red de Hubs")}>
+          Contactar a la coordinación
+        </a>
+        <p>{coordinacion.nombre}, {coordinacion.cargo}.</p>
       </div>
     </div>
   </section>
