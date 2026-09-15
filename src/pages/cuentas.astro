@@ -1,0 +1,583 @@
+---
+import Base from "../layouts/Base.astro";
+import miembros from "../data/miembros.json";
+import { url } from "../lib/rutas.js";
+import { AMBITOS, ROLES } from "../lib/sesion.js";
+
+const roles = Object.entries(ROLES).map(([clave, rol]) => ({ clave, ...rol }));
+const ambitos = Object.entries(AMBITOS).map(([clave, etiqueta]) => ({ clave, etiqueta }));
+const organizaciones = [
+  "Red Chilena de Hubs Municipales",
+  ...miembros.map((miembro) => miembro.organizacion),
+]
+  .filter((valor, indice, todas) => todas.indexOf(valor) === indice)
+  .sort((a, b) => a.localeCompare(b, "es"));
+---
+
+<Base
+  titulo="Cuentas de la Red"
+  descripcion="Gestión de las cuentas del área privada de la Red Chilena de Hubs Municipales."
+>
+  <p class="cargando" id="guardia">Comprobando la sesión…</p>
+
+  <noscript>
+    <p class="cargando">
+      Esta sección necesita JavaScript activado. <a href={url("/acceso")}>Volver a acceso miembros</a>
+    </p>
+  </noscript>
+
+  <section class="denegado" id="denegado" hidden>
+    <div class="envoltorio">
+      <p class="rotulo">Sin permiso</p>
+      <h1>Esta sección es de la coordinación</h1>
+      <p class="bajada">
+        La gestión de cuentas está reservada a la superadministración de la Red. Si necesitas dar de
+        alta a una contraparte, escribe a la coordinación.
+      </p>
+      <a class="boton boton--claro" href={url("/agenda")}>Ir a la agenda</a>
+    </div>
+  </section>
+
+  <div id="panel" hidden>
+    <section class="encabezado">
+      <div class="envoltorio">
+        <p class="rotulo">Superadministración</p>
+        <h1><span id="conteo">0</span> cuentas</h1>
+        <p class="bajada">
+          Cada cuenta representa a una contraparte de una organización integrante. El rol decide qué
+          puede hacer, y los ámbitos deciden dónde.
+        </p>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="envoltorio">
+        <p class="aviso">
+          Prototipo: estas cuentas viven solo en este navegador. No se publican para el resto de la
+          Red y no habilitan el ingreso, porque el ingreso todavía comprueba la lista de prueba que
+          viaja dentro del sitio.
+        </p>
+
+        <div class="barra">
+          <button class="boton boton--magenta" type="button" id="nueva">Nueva cuenta</button>
+          <button class="boton boton--claro" type="button" id="reiniciar">
+            Restaurar cuentas de prueba
+          </button>
+        </div>
+
+        <p class="error" id="error" role="alert" hidden></p>
+
+        <ul class="lista" id="lista-cuentas"></ul>
+        <p class="vacio" id="vacio" hidden>No hay cuentas registradas.</p>
+      </div>
+    </section>
+  </div>
+
+  <template id="molde-cuenta">
+    <li class="cuenta">
+      <p class="cuenta__rol"></p>
+      <h2 class="cuenta__nombre"></h2>
+      <p class="cuenta__correo"></p>
+      <dl class="cuenta__datos">
+        <div>
+          <dt>Organización</dt>
+          <dd class="cuenta__organizacion"></dd>
+        </div>
+        <div>
+          <dt>Ámbitos</dt>
+          <dd class="cuenta__ambitos"></dd>
+        </div>
+        <div>
+          <dt>Credencial</dt>
+          <dd class="cuenta__credencial"></dd>
+        </div>
+      </dl>
+      <p class="cuenta__acciones">
+        <button class="boton boton--claro" type="button" data-editar>Editar</button>
+        <button class="boton boton--claro cuenta__borrar" type="button" data-borrar>Borrar</button>
+      </p>
+    </li>
+  </template>
+
+  <dialog class="dialogo" id="dialogo">
+    <form class="formulario" id="formulario-cuenta" method="dialog">
+      <h2 id="titulo-dialogo">Nueva cuenta</h2>
+
+      <label class="campo">
+        <span class="campo__rotulo">Correo</span>
+        <input name="correo" id="correo" type="email" required maxlength="120" />
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Nombre de la contraparte</span>
+        <input name="nombre" type="text" required maxlength="120" />
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Organización</span>
+        <input name="organizacion" type="text" list="organizaciones" required maxlength="140" />
+      </label>
+      <datalist id="organizaciones">
+        {organizaciones.map((organizacion) => <option value={organizacion}></option>)}
+      </datalist>
+
+      <label class="campo">
+        <span class="campo__rotulo">Rol</span>
+        <select name="rol" id="rol">
+          {roles.map((rol) => <option value={rol.clave}>{rol.etiqueta}</option>)}
+        </select>
+      </label>
+      <p class="pista" id="pista-rol"></p>
+
+      <fieldset class="campo campo__ambitos" id="campo-ambitos">
+        <legend class="campo__rotulo">Ámbitos</legend>
+        {
+          ambitos.map((ambito) => (
+            <label class="casilla">
+              <input name="ambitos" type="checkbox" value={ambito.clave} />
+              <span>{ambito.etiqueta}</span>
+            </label>
+          ))
+        }
+      </fieldset>
+
+      <p class="error" id="error-dialogo" role="alert" hidden></p>
+
+      <p class="formulario__acciones">
+        <button class="boton boton--claro" type="button" id="cancelar">Cancelar</button>
+        <button class="boton boton--magenta" type="submit" id="guardar">Guardar cuenta</button>
+      </p>
+    </form>
+  </dialog>
+</Base>
+
+<script>
+  import { leerSesion, gestionaCuentas, AMBITOS, ROLES } from "../lib/sesion.js";
+  import {
+    listarCuentas,
+    crearCuenta,
+    actualizarCuenta,
+    borrarCuenta,
+    reiniciarCuentas,
+  } from "../lib/cuentas-backend.js";
+  import { url } from "../lib/rutas.js";
+
+  const sesion = leerSesion();
+
+  if (!sesion) {
+    window.location.replace(`${url("/ingresar")}?volver=${encodeURIComponent(window.location.pathname)}`);
+  } else if (!gestionaCuentas(sesion)) {
+    document.getElementById("guardia").hidden = true;
+    document.getElementById("denegado").hidden = false;
+  } else {
+    document.getElementById("guardia").hidden = true;
+    document.getElementById("panel").hidden = false;
+
+    const lista = document.getElementById("lista-cuentas");
+    const molde = document.getElementById("molde-cuenta");
+    const conteo = document.getElementById("conteo");
+    const vacio = document.getElementById("vacio");
+    const error = document.getElementById("error");
+    const dialogo = document.getElementById("dialogo");
+    const formulario = document.getElementById("formulario-cuenta");
+    const tituloDialogo = document.getElementById("titulo-dialogo");
+    const errorDialogo = document.getElementById("error-dialogo");
+    const correo = document.getElementById("correo");
+    const rol = document.getElementById("rol");
+    const pistaRol = document.getElementById("pista-rol");
+    const campoAmbitos = document.getElementById("campo-ambitos");
+    const guardar = document.getElementById("guardar");
+    const nueva = document.getElementById("nueva");
+    const reiniciar = document.getElementById("reiniciar");
+
+    let editando = null;
+
+    const avisar = (nodo, mensaje) => {
+      nodo.textContent = mensaje || "";
+      nodo.hidden = !mensaje;
+    };
+
+    const describirAmbitos = (cuenta) => {
+      if (cuenta.rol === "superadmin") return "Todos los ámbitos";
+      if (!cuenta.ambitos.length) return "Solo lectura";
+      return cuenta.ambitos.map((ambito) => AMBITOS[ambito]).join(" · ");
+    };
+
+    const construir = (cuenta) => {
+      const nodo = molde.content.firstElementChild.cloneNode(true);
+      const rotuloRol = ROLES[cuenta.rol];
+      nodo.dataset.correo = cuenta.correo;
+      nodo.style.setProperty("--color", rotuloRol.color);
+      nodo.querySelector(".cuenta__rol").textContent = rotuloRol.etiqueta;
+      nodo.querySelector(".cuenta__nombre").textContent = cuenta.nombre;
+      nodo.querySelector(".cuenta__correo").textContent = cuenta.correo;
+      nodo.querySelector(".cuenta__organizacion").textContent = cuenta.organizacion;
+      nodo.querySelector(".cuenta__ambitos").textContent = describirAmbitos(cuenta);
+      nodo.querySelector(".cuenta__credencial").textContent = cuenta.clave
+        ? "Clave de prueba activa"
+        : "Sin credencial";
+      if (cuenta.correo === sesion.correo) {
+        nodo.classList.add("cuenta--propia");
+        nodo.querySelector("[data-borrar]").hidden = true;
+      }
+      return nodo;
+    };
+
+    const pintar = (cuentas) => {
+      const ordenadas = [...cuentas].sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+      lista.replaceChildren(...ordenadas.map(construir));
+      conteo.textContent = String(ordenadas.length);
+      vacio.hidden = ordenadas.length > 0;
+    };
+
+    const refrescar = async () => {
+      try {
+        pintar(await listarCuentas());
+        avisar(error, "");
+      } catch (fallo) {
+        avisar(error, fallo.message);
+      }
+    };
+
+    const sincronizarRol = () => {
+      const elegido = ROLES[rol.value];
+      pistaRol.textContent = elegido ? elegido.resumen : "";
+      campoAmbitos.hidden = rol.value !== "admin";
+    };
+
+    const abrir = (cuenta) => {
+      editando = cuenta;
+      formulario.reset();
+      avisar(errorDialogo, "");
+      tituloDialogo.textContent = cuenta ? "Editar cuenta" : "Nueva cuenta";
+      correo.value = cuenta ? cuenta.correo : "";
+      correo.readOnly = Boolean(cuenta);
+      formulario.elements.nombre.value = cuenta ? cuenta.nombre : "";
+      formulario.elements.organizacion.value = cuenta ? cuenta.organizacion : "";
+      rol.value = cuenta ? cuenta.rol : "usuario";
+      rol.disabled = Boolean(cuenta) && cuenta.correo === sesion.correo;
+      campoAmbitos.querySelectorAll("input").forEach((casilla) => {
+        casilla.checked = Boolean(cuenta) && cuenta.ambitos.includes(casilla.value);
+      });
+      sincronizarRol();
+      dialogo.showModal();
+    };
+
+    rol.addEventListener("change", sincronizarRol);
+    nueva.addEventListener("click", () => abrir(null));
+    document.getElementById("cancelar").addEventListener("click", () => dialogo.close());
+
+    formulario.addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+      if (!gestionaCuentas(sesion)) return;
+      if (!formulario.reportValidity()) return;
+      const datos = new FormData(formulario);
+      const cuenta = {
+        correo: String(datos.get("correo")),
+        nombre: String(datos.get("nombre")),
+        organizacion: String(datos.get("organizacion")),
+        rol: rol.disabled ? sesion.rol : String(datos.get("rol")),
+        ambitos: datos.getAll("ambitos").map(String),
+      };
+      guardar.disabled = true;
+      try {
+        if (editando) await actualizarCuenta(editando.correo, cuenta);
+        else await crearCuenta(cuenta);
+        dialogo.close();
+        editando = null;
+        await refrescar();
+      } catch (fallo) {
+        avisar(errorDialogo, fallo.message);
+      } finally {
+        guardar.disabled = false;
+      }
+    });
+
+    lista.addEventListener("click", async (clic) => {
+      const ficha = clic.target.closest(".cuenta");
+      if (!ficha || !gestionaCuentas(sesion)) return;
+      const cuentas = await listarCuentas();
+      const cuenta = cuentas.find((registro) => registro.correo === ficha.dataset.correo);
+      if (!cuenta) return refrescar();
+
+      if (clic.target.closest("[data-editar]")) return abrir(cuenta);
+
+      if (clic.target.closest("[data-borrar]")) {
+        if (cuenta.correo === sesion.correo) return;
+        if (!window.confirm(`¿Borrar la cuenta de ${cuenta.nombre}?`)) return;
+        try {
+          await borrarCuenta(cuenta.correo);
+          await refrescar();
+        } catch (fallo) {
+          avisar(error, fallo.message);
+        }
+      }
+    });
+
+    reiniciar.addEventListener("click", async () => {
+      if (!window.confirm("¿Restaurar las cuentas de prueba y descartar los cambios locales?")) return;
+      try {
+        pintar(await reiniciarCuentas());
+        avisar(error, "");
+      } catch (fallo) {
+        avisar(error, fallo.message);
+      }
+    });
+
+    refrescar();
+  }
+</script>
+
+<style>
+  .cargando {
+    width: min(100% - 3rem, var(--ancho));
+    margin: 3rem auto;
+    font-weight: 600;
+  }
+
+  .denegado {
+    padding-block: clamp(3rem, 8vw, 5rem);
+  }
+
+  .denegado h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    margin-bottom: 1rem;
+  }
+
+  .denegado .bajada {
+    margin-bottom: 2rem;
+  }
+
+  .encabezado {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    margin-bottom: 1rem;
+  }
+
+  .aviso {
+    border: 1.5px solid var(--tinta);
+    background: var(--amarillo);
+    padding: 0.7rem 0.95rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 2rem;
+  }
+
+  .barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .barra .boton {
+    cursor: pointer;
+  }
+
+  .error {
+    margin: 0 0 1.5rem;
+    font-weight: 700;
+    border: 1.5px solid var(--tinta);
+    background: var(--naranja);
+    color: var(--papel);
+    padding: 0.55rem 0.8rem;
+  }
+
+  .error[hidden] {
+    display: none;
+  }
+
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: 1.25rem;
+  }
+
+  .cuenta {
+    border: var(--linea);
+    border-left: 10px solid var(--color, var(--amarillo));
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cuenta--propia {
+    background: #fbfbfc;
+  }
+
+  .cuenta__rol {
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+  }
+
+  .cuenta__nombre {
+    font-size: 1.15rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .cuenta__correo {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gris);
+    word-break: break-all;
+    margin: 0;
+  }
+
+  .cuenta__datos {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.1rem 0;
+    padding-top: 0.9rem;
+    border-top: 1.5px solid var(--tinta);
+  }
+
+  .cuenta__datos dt {
+    font-family: var(--display);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .cuenta__datos dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .cuenta__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: auto 0 0;
+  }
+
+  .cuenta__acciones .boton {
+    cursor: pointer;
+    font-size: 0.74rem;
+    padding: 0.55rem 1rem;
+  }
+
+  .cuenta__borrar:hover {
+    background: var(--naranja);
+    color: var(--papel);
+  }
+
+  .cuenta__acciones .boton[hidden] {
+    display: none;
+  }
+
+  .vacio {
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+
+  .dialogo {
+    width: min(100% - 2rem, 34rem);
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    background: var(--papel);
+    color: var(--tinta);
+    padding: 0;
+  }
+
+  .dialogo::backdrop {
+    background: rgba(12, 12, 14, 0.55);
+  }
+
+  .formulario {
+    display: grid;
+    gap: 1rem;
+    padding: 1.75rem;
+  }
+
+  .formulario h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .campo__rotulo {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .campo__ambitos {
+    border: 1.5px solid var(--tinta);
+    padding: 0.9rem 1rem 1rem;
+    margin: 0;
+  }
+
+  .campo__ambitos[hidden] {
+    display: none;
+  }
+
+  .casilla {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .pista {
+    margin: -0.5rem 0 0;
+    font-size: 0.85rem;
+    color: var(--gris);
+  }
+
+  .formulario input,
+  .formulario select {
+    font: inherit;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: var(--linea);
+    background: var(--papel);
+    color: inherit;
+    border-radius: 0;
+  }
+
+  .formulario input[readonly],
+  .formulario select:disabled {
+    background: #f1f1f4;
+    color: var(--gris);
+  }
+
+  .casilla input {
+    width: auto;
+    padding: 0;
+  }
+
+  .formulario__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding-top: 1.1rem;
+    border-top: var(--linea);
+  }
+
+  .formulario__acciones .boton {
+    cursor: pointer;
+  }
+</style>
