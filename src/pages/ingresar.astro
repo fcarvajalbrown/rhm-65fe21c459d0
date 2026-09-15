@@ -1,0 +1,271 @@
+---
+import Base from "../layouts/Base.astro";
+import { url } from "../lib/rutas.js";
+import { CUENTAS, ROLES, AMBITOS } from "../lib/sesion.js";
+
+const demo = CUENTAS.map((cuenta) => ({
+  correo: cuenta.correo,
+  clave: cuenta.clave,
+  rol: ROLES[cuenta.rol].etiqueta,
+  color: ROLES[cuenta.rol].color,
+  organizacion: cuenta.organizacion,
+  ambitos: cuenta.ambitos.map((ambito) => AMBITOS[ambito]).join(" · ") || "Solo lectura",
+}));
+---
+
+<Base
+  titulo="Ingresar"
+  descripcion="Ingreso al área privada de la Red Chilena de Hubs Municipales."
+>
+  <section class="ingreso">
+    <div class="envoltorio ingreso__caja">
+      <div class="ingreso__panel">
+        <p class="rotulo">Área privada</p>
+        <h1>Ingresar</h1>
+        <p class="bajada">
+          Las credenciales las entrega la coordinación de la Red a la contraparte de cada
+          organización integrante.
+        </p>
+
+        <form class="formulario" id="formulario-ingreso" novalidate>
+          <label class="campo">
+            <span class="campo__rotulo">Correo</span>
+            <input
+              id="correo"
+              name="correo"
+              type="email"
+              autocomplete="username"
+              required
+              placeholder="contraparte@tuhub.cl"
+            />
+          </label>
+
+          <label class="campo">
+            <span class="campo__rotulo">Clave</span>
+            <input
+              id="clave"
+              name="clave"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+
+          <p class="error" id="error" role="alert" hidden>
+            Correo o clave incorrectos.
+          </p>
+
+          <button class="boton boton--magenta" type="submit">Entrar</button>
+        </form>
+
+        <p class="ayuda">
+          ¿Sin credenciales? <a href={url("/acceso")}>Cómo acceder al área privada</a>
+        </p>
+      </div>
+
+      <aside class="prototipo">
+        <p class="prototipo__sello">Prototipo</p>
+        <h2>Este ingreso todavía no protege nada</h2>
+        <p>
+          El sitio se publica como archivos estáticos, así que no hay servidor que compruebe una
+          clave. La validación ocurre en el navegador y las credenciales de prueba viajan dentro del
+          propio sitio. Sirve para probar los roles y la interfaz, no para resguardar los contactos
+          reales de las contrapartes.
+        </p>
+
+        <h3>Cuentas de prueba</h3>
+        <ul class="cuentas">
+          {
+            demo.map((cuenta) => (
+              <li class="cuenta" style={`--color: ${cuenta.color}`}>
+                <span class="cuenta__rol">{cuenta.rol}</span>
+                <p class="cuenta__correo">{cuenta.correo}</p>
+                <p class="cuenta__clave">clave: {cuenta.clave}</p>
+                <p class="cuenta__detalle">{cuenta.organizacion}</p>
+                <p class="cuenta__detalle">{cuenta.ambitos}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { iniciarSesion, leerSesion } from "../lib/sesion.js";
+  import { url } from "../lib/rutas.js";
+
+  const destino = () => {
+    const volver = new URLSearchParams(window.location.search).get("volver");
+    if (!volver || !volver.startsWith("/") || volver.startsWith("//")) return url("/agenda");
+    return volver;
+  };
+
+  if (leerSesion()) window.location.replace(destino());
+
+  const formulario = document.getElementById("formulario-ingreso");
+  const error = document.getElementById("error");
+
+  formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const correo = document.getElementById("correo").value;
+    const clave = document.getElementById("clave").value;
+    const sesion = iniciarSesion(correo, clave);
+    if (!sesion) {
+      error.hidden = false;
+      document.getElementById("clave").value = "";
+      document.getElementById("clave").focus();
+      return;
+    }
+    error.hidden = true;
+    window.location.assign(destino());
+  });
+</script>
+
+<style>
+  .ingreso {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .ingreso__caja {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .ingreso h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    margin-bottom: 1rem;
+  }
+
+  .formulario {
+    display: grid;
+    gap: 1rem;
+    max-width: 26rem;
+    margin-top: 2rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .campo__rotulo {
+    font-family: var(--display);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .campo input {
+    font: inherit;
+    padding: 0.75rem 0.85rem;
+    border: var(--linea);
+    background: var(--papel);
+    color: inherit;
+    border-radius: 0;
+  }
+
+  .formulario .boton {
+    justify-self: start;
+    cursor: pointer;
+  }
+
+  .error {
+    margin: 0;
+    font-weight: 700;
+    border: 1.5px solid var(--tinta);
+    background: var(--naranja);
+    color: var(--papel);
+    padding: 0.55rem 0.8rem;
+  }
+
+  .ayuda {
+    margin-top: 1.5rem;
+    font-size: 0.92rem;
+  }
+
+  .prototipo {
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    background: var(--papel);
+    padding: 1.75rem;
+  }
+
+  .prototipo__sello {
+    display: inline-block;
+    font-family: var(--display);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--amarillo);
+    border: 1.5px solid var(--tinta);
+    padding: 0.25rem 0.6rem;
+    margin: 0 0 1rem;
+  }
+
+  .prototipo h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .prototipo p {
+    font-size: 0.95rem;
+    color: #3a3a42;
+  }
+
+  .prototipo h3 {
+    font-size: 1rem;
+    margin: 1.75rem 0 0.9rem;
+    padding-top: 1.25rem;
+    border-top: var(--linea);
+  }
+
+  .cuentas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .cuenta {
+    border: 1.5px solid var(--tinta);
+    border-left: 8px solid var(--color);
+    padding: 0.7rem 0.9rem;
+  }
+
+  .cuenta__rol {
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .cuenta p {
+    margin: 0;
+  }
+
+  .cuenta__correo {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    word-break: break-all;
+  }
+
+  .cuenta__clave,
+  .cuenta__detalle {
+    font-size: 0.82rem;
+    color: var(--gris);
+  }
+
+  @media (max-width: 900px) {
+    .ingreso__caja {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

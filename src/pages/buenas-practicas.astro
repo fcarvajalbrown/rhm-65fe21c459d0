@@ -1,0 +1,247 @@
+---
+import Base from "../layouts/Base.astro";
+import practicas from "../data/buenas-practicas.json";
+import { url } from "../lib/rutas.js";
+
+const paleta = ["var(--turquesa)", "var(--amarillo)", "var(--magenta)", "var(--violeta)", "var(--naranja)"];
+const areas = [...new Set(practicas.map((p) => p.area))].sort((a, b) => a.localeCompare(b, "es"));
+const colorArea = (area) => paleta[areas.indexOf(area) % paleta.length];
+
+const fichas = practicas
+  .map((practica) => ({ ...practica, color: colorArea(practica.area) }))
+  .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+---
+
+<Base
+  titulo="Buenas prácticas"
+  descripcion="Repositorio de buenas prácticas de la Red Chilena de Hubs Municipales, reservado a las organizaciones integrantes."
+>
+  <p class="cargando" id="guardia">Comprobando la sesión…</p>
+
+  <noscript>
+    <p class="cargando">
+      Esta sección necesita JavaScript activado. <a href={url("/acceso")}>Volver a acceso miembros</a>
+    </p>
+  </noscript>
+
+  <div id="reservado" hidden>
+    <section class="encabezado">
+      <div class="envoltorio">
+        <p class="rotulo">Reservado a integrantes</p>
+        <h1>Buenas prácticas</h1>
+        <p class="bajada">
+          {fichas.length} metodologías y aprendizajes documentados por los integrantes de la Red, con
+          su contacto de consulta y la documentación de respaldo.
+        </p>
+      </div>
+    </section>
+
+    <section class="seccion">
+      <div class="envoltorio">
+        <form class="filtros" id="filtros">
+          <label class="filtro">
+            <span class="visualmente-oculto">Área</span>
+            <select id="area">
+              <option value="">Todas las áreas</option>
+              {areas.map((area) => <option value={area}>{area}</option>)}
+            </select>
+          </label>
+          <p class="conteo"><span id="conteo">{fichas.length}</span> de {fichas.length}</p>
+        </form>
+
+        <ul class="lista">
+          {
+            fichas.map((ficha) => (
+              <li class="ficha" data-area={ficha.area} style={`--color: ${ficha.color}`}>
+                <p class="ficha__area">{ficha.area}</p>
+                <h2>{ficha.nombre}</h2>
+                <p class="ficha__subarea">{ficha.subarea}</p>
+                <p class="ficha__descripcion">{ficha.descripcion}</p>
+                <dl class="ficha__datos">
+                  <div>
+                    <dt>Origen</dt>
+                    <dd>{ficha.origen}</dd>
+                  </div>
+                  <div>
+                    <dt>Año</dt>
+                    <dd>{ficha.anio}</dd>
+                  </div>
+                  <div>
+                    <dt>Consultas</dt>
+                    <dd>{ficha.contacto}</dd>
+                  </div>
+                </dl>
+                {ficha.documentacion && (
+                  <a class="boton boton--claro" href={ficha.documentacion} rel="noopener noreferrer" target="_blank">
+                    Ver documentación
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="vacio" id="vacio" hidden>No hay buenas prácticas en esa área.</p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { leerSesion } from "../lib/sesion.js";
+  import { url } from "../lib/rutas.js";
+
+  const sesion = leerSesion();
+
+  if (!sesion) {
+    window.location.replace(`${url("/ingresar")}?volver=${encodeURIComponent(window.location.pathname)}`);
+  } else {
+    document.getElementById("guardia").hidden = true;
+    document.getElementById("reservado").hidden = false;
+
+    const area = document.getElementById("area");
+    const conteo = document.getElementById("conteo");
+    const vacio = document.getElementById("vacio");
+    const fichas = [...document.querySelectorAll(".ficha")];
+
+    const aplicar = () => {
+      let visibles = 0;
+      fichas.forEach((ficha) => {
+        const coincide = !area.value || ficha.dataset.area === area.value;
+        ficha.hidden = !coincide;
+        if (coincide) visibles += 1;
+      });
+      conteo.textContent = String(visibles);
+      vacio.hidden = visibles > 0;
+    };
+
+    area.addEventListener("change", aplicar);
+    document.getElementById("filtros").addEventListener("submit", (evento) => evento.preventDefault());
+  }
+</script>
+
+<style>
+  .cargando {
+    width: min(100% - 3rem, var(--ancho));
+    margin: 3rem auto;
+    font-weight: 600;
+  }
+
+  .encabezado {
+    background: var(--tinta);
+    color: var(--papel);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    margin-bottom: 1rem;
+  }
+
+  .encabezado .bajada {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .encabezado .rotulo::before {
+    background: var(--turquesa);
+  }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .filtro select {
+    font: inherit;
+    font-weight: 500;
+    padding: 0.7rem 2.2rem 0.7rem 0.85rem;
+    border: var(--linea);
+    background-color: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%),
+      linear-gradient(135deg, var(--tinta) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .conteo {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ficha {
+    border: var(--linea);
+    border-left: 10px solid var(--color);
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.6rem;
+  }
+
+  .ficha[hidden] {
+    display: none;
+  }
+
+  .ficha__area {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .ficha h2 {
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    margin-bottom: 0.4rem;
+  }
+
+  .ficha__subarea {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--gris);
+  }
+
+  .ficha__descripcion {
+    max-width: 78ch;
+  }
+
+  .ficha__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    margin: 1.25rem 0;
+    padding-top: 1rem;
+    border-top: 1.5px solid var(--tinta);
+  }
+
+  .ficha__datos dt {
+    font-family: var(--display);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+
+  .ficha__datos dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .vacio {
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+</style>

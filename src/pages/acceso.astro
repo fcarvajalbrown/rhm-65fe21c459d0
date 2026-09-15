@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import practicas from "../data/buenas-practicas.json";
 import miembros from "../data/miembros.json";
 import { coordinacion, enlaceCorreo } from "../lib/contacto.js";
+import { url } from "../lib/rutas.js";
 
 const areas = [...new Set(practicas.map((p) => p.area))].sort((a, b) => a.localeCompare(b, "es"));
 
@@ -53,6 +54,7 @@ const privado = [
           Parte del material de la Red circula solo entre sus integrantes. Si tu organización ya es
           miembro, la coordinación entrega las credenciales de acceso.
         </p>
+        <a class="boton boton--magenta" href={url("/ingresar")}>Ingresar</a>
       </div>
       <div class="candado" aria-hidden="true">
         <svg viewBox="0 0 64 64" role="presentation">
@@ -135,6 +137,10 @@ const privado = [
 
   .encabezado .bajada {
     color: rgba(255, 255, 255, 0.78);
+  }
+
+  .encabezado .boton {
+    box-shadow: 6px 6px 0 var(--amarillo);
   }
 
   .encabezado .rotulo::before {
