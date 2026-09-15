@@ -1,6 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import miembros from "../data/miembros.json";
 import { eventos, proximas, anteriores } from "../lib/agenda.js";
+import { colorCategoria } from "../lib/categorias.js";
 
 const categorias = [...new Set(eventos.map((e) => e.categoria).filter(Boolean))].sort((a, b) =>
   a.localeCompare(b, "es")
@@ -8,14 +10,12 @@ const categorias = [...new Set(eventos.map((e) => e.categoria).filter(Boolean))]
 const modalidades = [...new Set(eventos.map((e) => e.modalidad).filter(Boolean))].sort((a, b) =>
   a.localeCompare(b, "es")
 );
-
-const colorCategoria = {
-  Evento: "var(--magenta)",
-  Capacitación: "var(--turquesa)",
-  "Reunión Red": "var(--amarillo)",
-  "Mesa Territorial": "var(--violeta)",
-  Otro: "var(--naranja)",
-};
+const organizadores = [
+  ...new Set([
+    ...miembros.map((m) => m.organizacion),
+    ...eventos.map((e) => e.organizador).filter((valor) => valor && valor !== "-"),
+  ]),
+].sort((a, b) => a.localeCompare(b, "es"));
 ---
 
 <Base
@@ -25,32 +25,44 @@ const colorCategoria = {
   <section class="encabezado">
     <div class="envoltorio">
       <p class="rotulo">Agenda de la Red</p>
-      <h1>{proximas.length} actividades próximas</h1>
+      <h1><span data-conteo="proximas">{proximas.length}</span> actividades próximas</h1>
       <p class="bajada">
-        {anteriores.length} actividades anteriores desde la reunión anual de mayo. La agenda recoge
-        lo que organiza cada integrante y lo abre al resto de la Red.
+        <span data-conteo="anteriores">{anteriores.length}</span> actividades anteriores desde la
+        reunión anual de mayo. La agenda recoge lo que organiza cada integrante y lo abre al resto de
+        la Red.
       </p>
     </div>
   </section>
 
   <section class="seccion">
     <div class="envoltorio">
-      <form class="filtros" id="filtros">
-        <label class="filtro">
-          <span class="visualmente-oculto">Categoría</span>
-          <select id="categoria">
-            <option value="">Todas las categorías</option>
-            {categorias.map((categoria) => <option value={categoria}>{categoria}</option>)}
-          </select>
-        </label>
-        <label class="filtro">
-          <span class="visualmente-oculto">Modalidad</span>
-          <select id="modalidad">
-            <option value="">Toda modalidad</option>
-            {modalidades.map((modalidad) => <option value={modalidad}>{modalidad}</option>)}
-          </select>
-        </label>
-      </form>
+      <div class="barra">
+        <form class="filtros" id="filtros">
+          <label class="filtro">
+            <span class="visualmente-oculto">Categoría</span>
+            <select id="categoria">
+              <option value="">Todas las categorías</option>
+              {categorias.map((categoria) => <option value={categoria}>{categoria}</option>)}
+            </select>
+          </label>
+          <label class="filtro">
+            <span class="visualmente-oculto">Modalidad</span>
+            <select id="modalidad">
+              <option value="">Toda modalidad</option>
+              {modalidades.map((modalidad) => <option value={modalidad}>{modalidad}</option>)}
+            </select>
+          </label>
+        </form>
+
+        <button class="boton boton--magenta nueva" type="button" id="nueva" hidden>
+          Nueva actividad
+        </button>
+      </div>
+
+      <p class="aviso" id="aviso" hidden>
+        Prototipo: lo que crees o borres aquí queda solo en este navegador y no se publica para el
+        resto de la Red.
+      </p>
 
       <div class="bloque">
         <h2 class="bloque__titulo">Próximas actividades</h2>
@@ -59,9 +71,12 @@ const colorCategoria = {
             proximas.map((evento) => (
               <li
                 class="evento"
+                data-id={evento.id}
+                data-fecha={evento.fecha}
+                data-organizador={evento.organizador}
                 data-categoria={evento.categoria}
                 data-modalidad={evento.modalidad}
-                style={`--color: ${colorCategoria[evento.categoria] || "var(--lila-hondo)"}`}
+                style={`--color: ${colorCategoria(evento.categoria)}`}
               >
                 <div class="evento__fecha">
                   <span class="evento__dia">{evento.dia}</span>
@@ -79,6 +94,10 @@ const colorCategoria = {
                   {evento.conQuien && <p class="evento__quien">Con: {evento.conQuien}</p>}
                   {evento.notas && <p class="evento__notas">{evento.notas}</p>}
                 </div>
+                <button class="evento__borrar" type="button" data-borrar hidden>
+                  <span class="visualmente-oculto">Borrar {evento.titulo}</span>
+                  <span aria-hidden="true">×</span>
+                </button>
               </li>
             ))
           }
@@ -93,9 +112,12 @@ const colorCategoria = {
             anteriores.map((evento) => (
               <li
                 class="evento evento--pasado"
+                data-id={evento.id}
+                data-fecha={evento.fecha}
+                data-organizador={evento.organizador}
                 data-categoria={evento.categoria}
                 data-modalidad={evento.modalidad}
-                style={`--color: ${colorCategoria[evento.categoria] || "var(--lila-hondo)"}`}
+                style={`--color: ${colorCategoria(evento.categoria)}`}
               >
                 <div class="evento__fecha">
                   <span class="evento__dia">{evento.dia}</span>
@@ -116,6 +138,10 @@ const colorCategoria = {
                   </p>
                   {evento.lugar && <p class="evento__lugar">{evento.lugar}</p>}
                 </div>
+                <button class="evento__borrar" type="button" data-borrar hidden>
+                  <span class="visualmente-oculto">Borrar {evento.titulo}</span>
+                  <span aria-hidden="true">×</span>
+                </button>
               </li>
             ))
           }
@@ -124,15 +150,118 @@ const colorCategoria = {
       </div>
     </div>
   </section>
+
+  <template id="molde-evento">
+    <li class="evento">
+      <div class="evento__fecha">
+        <span class="evento__dia"></span>
+        <span class="evento__mes"></span>
+        <span class="evento__anio"></span>
+      </div>
+      <div class="evento__cuerpo">
+        <h3></h3>
+        <p class="evento__meta"></p>
+        <p class="evento__lugar" hidden></p>
+        <p class="evento__quien" hidden></p>
+        <p class="evento__notas" hidden></p>
+      </div>
+      <button class="evento__borrar" type="button" data-borrar hidden>
+        <span class="visualmente-oculto">Borrar actividad</span>
+        <span aria-hidden="true">×</span>
+      </button>
+    </li>
+  </template>
+
+  <dialog class="dialogo" id="dialogo">
+    <form class="formulario" id="formulario-evento" method="dialog">
+      <h2>Nueva actividad</h2>
+
+      <label class="campo">
+        <span class="campo__rotulo">Título</span>
+        <input name="titulo" type="text" required maxlength="140" />
+      </label>
+
+      <div class="campo__par">
+        <label class="campo">
+          <span class="campo__rotulo">Fecha</span>
+          <input name="fecha" type="date" required />
+        </label>
+        <label class="campo">
+          <span class="campo__rotulo">Organiza</span>
+          <select name="organizador" id="organizador">
+            {organizadores.map((organizador) => <option value={organizador}>{organizador}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <div class="campo__par">
+        <label class="campo">
+          <span class="campo__rotulo">Hora de inicio</span>
+          <input name="horaInicio" type="time" />
+        </label>
+        <label class="campo">
+          <span class="campo__rotulo">Hora de término</span>
+          <input name="horaFin" type="time" />
+        </label>
+      </div>
+
+      <div class="campo__par">
+        <label class="campo">
+          <span class="campo__rotulo">Categoría</span>
+          <select name="categoria">
+            {categorias.map((categoria) => <option value={categoria}>{categoria}</option>)}
+          </select>
+        </label>
+        <label class="campo">
+          <span class="campo__rotulo">Modalidad</span>
+          <select name="modalidad">
+            {modalidades.map((modalidad) => <option value={modalidad}>{modalidad}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="campo__rotulo">Lugar</span>
+        <input name="lugar" type="text" maxlength="140" />
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Con quién</span>
+        <input name="conQuien" type="text" maxlength="140" />
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Notas</span>
+        <textarea name="notas" rows="3" maxlength="400"></textarea>
+      </label>
+
+      <p class="formulario__acciones">
+        <button class="boton boton--claro" type="button" id="cancelar">Cancelar</button>
+        <button class="boton boton--magenta" type="submit">Guardar actividad</button>
+      </p>
+    </form>
+  </dialog>
 </Base>
 
 <script>
+  import { leerSesion, puede } from "../lib/sesion.js";
+  import { agregados, borrados, agregar, borrar, idDeEvento, hoyLocal } from "../lib/agenda-local.js";
+  import { MESES, colorCategoria } from "../lib/categorias.js";
+
+  const sesion = leerSesion();
+
   const categoria = document.getElementById("categoria");
   const modalidad = document.getElementById("modalidad");
   const listas = {
     proximas: document.getElementById("lista-proximas"),
     anteriores: document.getElementById("lista-anteriores"),
   };
+  const molde = document.getElementById("molde-evento");
+  const dialogo = document.getElementById("dialogo");
+  const formulario = document.getElementById("formulario-evento");
+  const organizador = document.getElementById("organizador");
+  const nueva = document.getElementById("nueva");
+  const aviso = document.getElementById("aviso");
 
   const aplicar = () => {
     Object.entries(listas).forEach(([clave, lista]) => {
@@ -148,8 +277,141 @@ const colorCategoria = {
     });
   };
 
+  const contar = () => {
+    Object.entries(listas).forEach(([clave, lista]) => {
+      document.querySelector(`[data-conteo="${clave}"]`).textContent = String(
+        lista.querySelectorAll(".evento").length
+      );
+    });
+  };
+
+  const marcarPermisos = () => {
+    document.querySelectorAll(".evento").forEach((nodo) => {
+      const boton = nodo.querySelector("[data-borrar]");
+      if (boton) boton.hidden = !puede(sesion, "agenda", "borrar", nodo.dataset.organizador);
+    });
+  };
+
+  const rellenar = (nodo, selector, valor) => {
+    const campo = nodo.querySelector(selector);
+    campo.textContent = valor || "";
+    campo.hidden = !valor;
+  };
+
+  const construir = (evento) => {
+    const nodo = molde.content.firstElementChild.cloneNode(true);
+    const [anio, mes, dia] = evento.fecha.split("-");
+    nodo.dataset.id = evento.id;
+    nodo.dataset.fecha = evento.fecha;
+    nodo.dataset.organizador = evento.organizador || "";
+    nodo.dataset.categoria = evento.categoria || "";
+    nodo.dataset.modalidad = evento.modalidad || "";
+    nodo.style.setProperty("--color", colorCategoria(evento.categoria));
+    if (evento.fecha < hoyLocal()) nodo.classList.add("evento--pasado");
+    nodo.querySelector(".evento__dia").textContent = dia;
+    nodo.querySelector(".evento__mes").textContent = MESES[Number(mes) - 1];
+    nodo.querySelector(".evento__anio").textContent = anio;
+    nodo.querySelector("h3").textContent = evento.titulo;
+    nodo.querySelector(".evento__meta").textContent = [
+      evento.categoria,
+      evento.modalidad,
+      [evento.horaInicio, evento.horaFin].filter(Boolean).join(" a "),
+      evento.organizador,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    rellenar(nodo, ".evento__lugar", evento.lugar);
+    rellenar(nodo, ".evento__quien", evento.conQuien ? `Con: ${evento.conQuien}` : "");
+    rellenar(nodo, ".evento__notas", evento.notas);
+    nodo.querySelector(".visualmente-oculto").textContent = `Borrar ${evento.titulo}`;
+    return nodo;
+  };
+
+  const insertar = (nodo) => {
+    const pasado = nodo.dataset.fecha < hoyLocal();
+    const lista = pasado ? listas.anteriores : listas.proximas;
+    const siguiente = [...lista.querySelectorAll(".evento")].find((otro) =>
+      pasado ? otro.dataset.fecha < nodo.dataset.fecha : otro.dataset.fecha > nodo.dataset.fecha
+    );
+    if (siguiente) lista.insertBefore(nodo, siguiente);
+    else lista.append(nodo);
+  };
+
+  const restringirOrganizador = () => {
+    if (!sesion || sesion.rol === "superadmin") return;
+    const propia = sesion.organizacion;
+    if (![...organizador.options].some((opcion) => opcion.value === propia)) {
+      organizador.add(new Option(propia, propia));
+    }
+    [...organizador.options].forEach((opcion) => {
+      if (opcion.value !== propia) opcion.remove();
+    });
+    organizador.value = propia;
+  };
+
+  const idsBorrados = new Set(borrados());
+  document.querySelectorAll(".evento").forEach((nodo) => {
+    if (idsBorrados.has(nodo.dataset.id)) nodo.remove();
+  });
+  agregados().forEach((evento) => insertar(construir(evento)));
+
+  const puedeCrear = puede(sesion, "agenda", "crear");
+  nueva.hidden = !puedeCrear;
+  aviso.hidden = !puedeCrear;
+  restringirOrganizador();
+  marcarPermisos();
+  contar();
+  aplicar();
+
   [categoria, modalidad].forEach((control) => control.addEventListener("change", aplicar));
   document.getElementById("filtros").addEventListener("submit", (evento) => evento.preventDefault());
+
+  nueva.addEventListener("click", () => dialogo.showModal());
+  document.getElementById("cancelar").addEventListener("click", () => dialogo.close());
+
+  formulario.addEventListener("submit", () => {
+    if (!puede(sesion, "agenda", "crear")) return;
+    const datos = new FormData(formulario);
+    const fecha = String(datos.get("fecha"));
+    const titulo = String(datos.get("titulo")).trim();
+    const texto = (campo) => String(datos.get(campo) || "").trim() || null;
+    const evento = {
+      id: idDeEvento(fecha, titulo),
+      organizador: texto("organizador"),
+      fecha,
+      horaInicio: texto("horaInicio"),
+      horaFin: texto("horaFin"),
+      categoria: texto("categoria"),
+      titulo,
+      conQuien: texto("conQuien"),
+      modalidad: texto("modalidad"),
+      lugar: texto("lugar"),
+      notas: texto("notas"),
+      estado: "Pendiente",
+    };
+    const repetido = document.querySelector(`.evento[data-id="${evento.id}"]`);
+    if (repetido) repetido.remove();
+    agregar(evento);
+    insertar(construir(evento));
+    marcarPermisos();
+    contar();
+    aplicar();
+    formulario.reset();
+    restringirOrganizador();
+  });
+
+  document.addEventListener("click", (clic) => {
+    const boton = clic.target.closest("[data-borrar]");
+    if (!boton) return;
+    const nodo = boton.closest(".evento");
+    if (!puede(sesion, "agenda", "borrar", nodo.dataset.organizador)) return;
+    const titulo = nodo.querySelector("h3").firstChild.textContent.trim();
+    if (!window.confirm(`¿Borrar la actividad "${titulo}"?`)) return;
+    borrar(nodo.dataset.id);
+    nodo.remove();
+    contar();
+    aplicar();
+  });
 </script>
 
 <style>
@@ -164,11 +426,40 @@ const colorCategoria = {
     margin-bottom: 1rem;
   }
 
+  .barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
   .filtros {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 2.5rem;
+  }
+
+  .nueva {
+    cursor: pointer;
+  }
+
+  .nueva[hidden] {
+    display: none;
+  }
+
+  .aviso {
+    border: 1.5px solid var(--tinta);
+    background: var(--amarillo);
+    padding: 0.7rem 0.95rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: -1.25rem 0 2.5rem;
+  }
+
+  .aviso[hidden] {
+    display: none;
   }
 
   .filtro select {
@@ -212,6 +503,7 @@ const colorCategoria = {
   }
 
   .evento {
+    position: relative;
     display: grid;
     grid-template-columns: 5.2rem minmax(0, 1fr);
     gap: 1.25rem;
@@ -219,6 +511,37 @@ const colorCategoria = {
     box-shadow: var(--sombra-corta);
     background: var(--papel);
     padding: 1.1rem 1.3rem;
+  }
+
+  .evento__borrar {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    border: 1.5px solid var(--tinta);
+    background: var(--papel);
+    color: var(--tinta);
+    padding: 0;
+  }
+
+  .evento__borrar:hover {
+    background: var(--naranja);
+    color: var(--papel);
+  }
+
+  .evento__borrar[hidden] {
+    display: none;
+  }
+
+  .evento:has(.evento__borrar:not([hidden])) .evento__cuerpo h3 {
+    padding-right: 2.4rem;
   }
 
   .evento[hidden] {
@@ -307,11 +630,83 @@ const colorCategoria = {
     font-weight: 600;
   }
 
+  .dialogo {
+    width: min(100% - 2rem, 40rem);
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    background: var(--papel);
+    color: var(--tinta);
+    padding: 0;
+  }
+
+  .dialogo::backdrop {
+    background: rgba(12, 12, 14, 0.55);
+  }
+
+  .formulario {
+    display: grid;
+    gap: 1rem;
+    padding: 1.75rem;
+  }
+
+  .formulario h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .campo__rotulo {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .campo__par {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea {
+    font: inherit;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: var(--linea);
+    background: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    resize: vertical;
+  }
+
+  .formulario__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding-top: 1.1rem;
+    border-top: var(--linea);
+  }
+
+  .formulario__acciones .boton {
+    cursor: pointer;
+  }
+
   @media (max-width: 560px) {
     .evento {
       grid-template-columns: 4.2rem minmax(0, 1fr);
       gap: 0.9rem;
       padding: 0.9rem 1rem;
+    }
+
+    .campo__par {
+      grid-template-columns: 1fr;
     }
   }
 </style>
