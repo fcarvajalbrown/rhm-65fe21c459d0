@@ -1,11 +1,13 @@
 ---
 import { url, esActiva } from "../lib/rutas.js";
+import { LLAVE_SESION, ROLES } from "../lib/sesion.js";
 
 const actual = Astro.url.pathname;
 const enlaces = [
   { href: "/", texto: "Inicio" },
   { href: "/integrantes", texto: "Integrantes" },
   { href: "/agenda", texto: "Agenda de la Red" },
+  { href: "/noticias", texto: "Noticias" },
   { href: "/startups", texto: "Startups" },
 ];
 ---
@@ -34,10 +36,87 @@ const enlaces = [
           </a>
         ))
       }
-      <a class="boton boton--magenta cabecera__acceso" href={url("/acceso")}>Acceso miembros</a>
+      <a
+        href={url("/buenas-practicas")}
+        class:list={[
+          "cabecera__enlace",
+          "cabecera__reservado",
+          { "es-activo": esActiva(actual, "/buenas-practicas") },
+        ]}
+        aria-current={esActiva(actual, "/buenas-practicas") ? "page" : undefined}
+        data-sesion-dentro
+        hidden
+      >
+        Buenas prácticas
+      </a>
+
+      <a
+        href={url("/cuentas")}
+        class:list={[
+          "cabecera__enlace",
+          "cabecera__reservado",
+          { "es-activo": esActiva(actual, "/cuentas") },
+        ]}
+        aria-current={esActiva(actual, "/cuentas") ? "page" : undefined}
+        data-sesion-superadmin
+        hidden
+      >
+        Cuentas
+      </a>
+
+      <a class="boton boton--magenta cabecera__acceso" href={url("/acceso")} data-sesion-fuera>
+        Acceso miembros
+      </a>
+
+      <div class="cabecera__cuenta" data-sesion-dentro hidden>
+        <span class="cabecera__rol" data-sesion-rol></span>
+        <span class="cabecera__organizacion" data-sesion-organizacion></span>
+        <button class="cabecera__salir" type="button" data-sesion-salir>Salir</button>
+      </div>
     </nav>
   </div>
 </header>
+
+<script is:inline define:vars={{ LLAVE_SESION, ROLES }}>
+  (() => {
+    let sesion = null;
+    try {
+      const bruto = sessionStorage.getItem(LLAVE_SESION);
+      const leida = bruto ? JSON.parse(bruto) : null;
+      if (leida && ROLES[leida.rol]) sesion = leida;
+    } catch (error) {
+      sesion = null;
+    }
+
+    document.querySelectorAll("[data-sesion-fuera]").forEach((nodo) => {
+      nodo.hidden = Boolean(sesion);
+    });
+    document.querySelectorAll("[data-sesion-dentro]").forEach((nodo) => {
+      nodo.hidden = !sesion;
+    });
+    document.querySelectorAll("[data-sesion-superadmin]").forEach((nodo) => {
+      nodo.hidden = !sesion || sesion.rol !== "superadmin";
+    });
+
+    if (!sesion) return;
+
+    const rol = ROLES[sesion.rol];
+    const rotulo = document.querySelector("[data-sesion-rol]");
+    rotulo.textContent = rol.etiqueta;
+    rotulo.style.setProperty("--color", rol.color);
+    document.querySelector("[data-sesion-organizacion]").textContent = sesion.organizacion;
+  })();
+</script>
+
+<script>
+  import { cerrarSesion } from "../lib/sesion.js";
+  import { url } from "../lib/rutas.js";
+
+  document.querySelector("[data-sesion-salir]")?.addEventListener("click", () => {
+    cerrarSesion();
+    window.location.href = url("/");
+  });
+</script>
 
 <style>
   .cabecera {
@@ -88,6 +167,61 @@ const enlaces = [
     font-size: 0.82rem;
   }
 
+  .cabecera__nav [hidden] {
+    display: none;
+  }
+
+  .cabecera__reservado {
+    border-bottom-color: var(--turquesa);
+  }
+
+  .cabecera__cuenta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: var(--linea);
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 0.35rem 0.35rem 0.35rem 0.55rem;
+  }
+
+  .cabecera__rol {
+    font-family: var(--display);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--color, var(--amarillo));
+    border: 1.5px solid var(--tinta);
+    padding: 0.2rem 0.45rem;
+  }
+
+  .cabecera__organizacion {
+    font-size: 0.82rem;
+    font-weight: 600;
+    max-width: 14ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cabecera__salir {
+    font: inherit;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1.5px solid var(--tinta);
+    background: var(--tinta);
+    color: var(--papel);
+    padding: 0.35rem 0.7rem;
+  }
+
+  .cabecera__salir:hover {
+    background: var(--magenta);
+    color: var(--tinta);
+  }
+
   .cabecera__interruptor,
   .cabecera__hamburguesa {
     display: none;
@@ -131,6 +265,14 @@ const enlaces = [
 
     .cabecera__acceso {
       margin-top: 0.75rem;
+    }
+
+    .cabecera__cuenta {
+      margin-top: 0.9rem;
+    }
+
+    .cabecera__organizacion {
+      max-width: 22ch;
     }
   }
 </style>
