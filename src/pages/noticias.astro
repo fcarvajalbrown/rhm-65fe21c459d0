@@ -1,0 +1,602 @@
+---
+import Base from "../layouts/Base.astro";
+import miembros from "../data/miembros.json";
+import { TEMATICAS } from "../lib/noticias-backend.js";
+
+const organizaciones = [
+  "Red Chilena de Hubs Municipales",
+  ...miembros.map((miembro) => miembro.organizacion),
+]
+  .filter((valor, indice, todas) => todas.indexOf(valor) === indice)
+  .sort((a, b) => a.localeCompare(b, "es"));
+---
+
+<Base
+  titulo="Noticias y novedades"
+  descripcion="Noticias y novedades de la Red Chilena de Hubs Municipales y de sus organizaciones integrantes."
+>
+  <section class="encabezado">
+    <div class="envoltorio">
+      <p class="rotulo">Noticias y novedades</p>
+      <h1>Lo que cuenta la Red</h1>
+      <p class="bajada">
+        <span id="conteo">0</span> publicaciones de la coordinación y de las organizaciones
+        integrantes.
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="envoltorio">
+      <div class="barra">
+        <form class="filtros" id="filtros">
+          <label class="filtro">
+            <span class="visualmente-oculto">Temática</span>
+            <select id="tematica">
+              <option value="">Todas las temáticas</option>
+              {TEMATICAS.map((tematica) => <option value={tematica}>{tematica}</option>)}
+            </select>
+          </label>
+        </form>
+
+        <div class="barra__acciones">
+          <button class="boton boton--magenta" type="button" id="nueva" hidden>Nueva noticia</button>
+          <button class="boton boton--claro" type="button" id="reiniciar" hidden>
+            Restaurar ejemplos
+          </button>
+        </div>
+      </div>
+
+      <p class="aviso" id="aviso" hidden>
+        Prototipo: lo que publiques o borres aquí queda solo en este navegador y no se publica para el
+        resto de la Red.
+      </p>
+
+      <p class="error" id="error" role="alert" hidden></p>
+
+      <p class="cargando" id="cargando">Cargando noticias…</p>
+
+      <noscript>
+        <p class="cargando">
+          Esta sección necesita JavaScript activado para mostrar las noticias.
+        </p>
+      </noscript>
+
+      <ul class="lista" id="lista-noticias"></ul>
+      <p class="vacio" id="vacio" hidden>No hay noticias con esa temática.</p>
+    </div>
+  </section>
+
+  <template id="molde-noticia">
+    <li class="noticia">
+      <p class="noticia__tematica"></p>
+      <h2 class="noticia__titulo"></h2>
+      <p class="noticia__meta"></p>
+      <p class="noticia__resumen"></p>
+      <p class="noticia__cuerpo"></p>
+      <p class="noticia__pie">
+        <a class="boton boton--claro noticia__enlace" rel="noopener noreferrer" target="_blank" hidden>
+          Leer la publicación
+        </a>
+        <span class="noticia__ejemplo" hidden>Contenido de ejemplo</span>
+      </p>
+      <button class="noticia__borrar" type="button" data-borrar hidden>
+        <span class="visualmente-oculto">Borrar noticia</span>
+        <span aria-hidden="true">×</span>
+      </button>
+    </li>
+  </template>
+
+  <dialog class="dialogo" id="dialogo">
+    <form class="formulario" id="formulario-noticia" method="dialog">
+      <h2>Nueva noticia</h2>
+
+      <label class="campo">
+        <span class="campo__rotulo">Titular</span>
+        <input name="titulo" type="text" required maxlength="140" />
+      </label>
+
+      <div class="campo__par">
+        <label class="campo">
+          <span class="campo__rotulo">Fecha</span>
+          <input name="fecha" type="date" required />
+        </label>
+        <label class="campo">
+          <span class="campo__rotulo">Temática</span>
+          <select name="tematica">
+            {TEMATICAS.map((tematica) => <option value={tematica}>{tematica}</option>)}
+          </select>
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="campo__rotulo">Publica</span>
+        <select name="organizacion" id="organizacion">
+          {organizaciones.map((organizacion) => <option value={organizacion}>{organizacion}</option>)}
+        </select>
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Bajada</span>
+        <input name="resumen" type="text" maxlength="220" />
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Cuerpo</span>
+        <textarea name="cuerpo" rows="4" maxlength="1200"></textarea>
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Enlace</span>
+        <input name="enlace" type="url" maxlength="300" placeholder="https://" />
+      </label>
+
+      <p class="error" id="error-dialogo" role="alert" hidden></p>
+
+      <p class="formulario__acciones">
+        <button class="boton boton--claro" type="button" id="cancelar">Cancelar</button>
+        <button class="boton boton--magenta" type="submit" id="guardar">Publicar noticia</button>
+      </p>
+    </form>
+  </dialog>
+</Base>
+
+<script>
+  import { leerSesion, puede } from "../lib/sesion.js";
+  import {
+    listarNoticias,
+    crearNoticia,
+    borrarNoticia,
+    reiniciarNoticias,
+  } from "../lib/noticias-backend.js";
+  import { MESES, colorTematica } from "../lib/categorias.js";
+
+  const sesion = leerSesion();
+
+  const tematica = document.getElementById("tematica");
+  const lista = document.getElementById("lista-noticias");
+  const molde = document.getElementById("molde-noticia");
+  const conteo = document.getElementById("conteo");
+  const vacio = document.getElementById("vacio");
+  const cargando = document.getElementById("cargando");
+  const error = document.getElementById("error");
+  const aviso = document.getElementById("aviso");
+  const nueva = document.getElementById("nueva");
+  const reiniciar = document.getElementById("reiniciar");
+  const dialogo = document.getElementById("dialogo");
+  const formulario = document.getElementById("formulario-noticia");
+  const errorDialogo = document.getElementById("error-dialogo");
+  const organizacion = document.getElementById("organizacion");
+  const guardar = document.getElementById("guardar");
+
+  const puedeCrear = puede(sesion, "noticias", "crear");
+
+  const avisar = (nodo, mensaje) => {
+    nodo.textContent = mensaje || "";
+    nodo.hidden = !mensaje;
+  };
+
+  const rellenar = (nodo, selector, valor) => {
+    const campo = nodo.querySelector(selector);
+    campo.textContent = valor || "";
+    campo.hidden = !valor;
+  };
+
+  const fechaLarga = (fecha) => {
+    const [anio, mes, dia] = fecha.split("-");
+    return `${Number(dia)} ${MESES[Number(mes) - 1]} ${anio}`;
+  };
+
+  const construir = (noticia) => {
+    const nodo = molde.content.firstElementChild.cloneNode(true);
+    nodo.dataset.id = noticia.id;
+    nodo.dataset.tematica = noticia.tematica;
+    nodo.dataset.organizacion = noticia.organizacion;
+    nodo.style.setProperty("--color", colorTematica(noticia.tematica));
+    nodo.querySelector(".noticia__tematica").textContent = noticia.tematica;
+    nodo.querySelector(".noticia__titulo").textContent = noticia.titulo;
+    nodo.querySelector(".noticia__meta").textContent = `${fechaLarga(noticia.fecha)} · ${noticia.organizacion}`;
+    rellenar(nodo, ".noticia__resumen", noticia.resumen);
+    rellenar(nodo, ".noticia__cuerpo", noticia.cuerpo);
+    const enlace = nodo.querySelector(".noticia__enlace");
+    enlace.hidden = !noticia.enlace;
+    if (noticia.enlace) enlace.href = noticia.enlace;
+    nodo.querySelector(".noticia__ejemplo").hidden = !noticia.ejemplo;
+    nodo.querySelector(".noticia__pie").hidden = !noticia.enlace && !noticia.ejemplo;
+    const borrar = nodo.querySelector("[data-borrar]");
+    borrar.hidden = !puede(sesion, "noticias", "borrar", noticia.organizacion);
+    borrar.querySelector(".visualmente-oculto").textContent = `Borrar ${noticia.titulo}`;
+    return nodo;
+  };
+
+  const aplicar = () => {
+    let visibles = 0;
+    lista.querySelectorAll(".noticia").forEach((nodo) => {
+      const coincide = !tematica.value || nodo.dataset.tematica === tematica.value;
+      nodo.hidden = !coincide;
+      if (coincide) visibles += 1;
+    });
+    conteo.textContent = String(visibles);
+    vacio.hidden = visibles > 0;
+  };
+
+  const pintar = (noticias) => {
+    lista.replaceChildren(...noticias.map(construir));
+    cargando.hidden = true;
+    aplicar();
+  };
+
+  const refrescar = async () => {
+    try {
+      pintar(await listarNoticias());
+      avisar(error, "");
+    } catch (fallo) {
+      cargando.hidden = true;
+      avisar(error, fallo.message);
+    }
+  };
+
+  const restringirOrganizacion = () => {
+    if (!sesion || sesion.rol === "superadmin") return;
+    const propia = sesion.organizacion;
+    if (![...organizacion.options].some((opcion) => opcion.value === propia)) {
+      organizacion.add(new Option(propia, propia));
+    }
+    [...organizacion.options].forEach((opcion) => {
+      if (opcion.value !== propia) opcion.remove();
+    });
+    organizacion.value = propia;
+  };
+
+  nueva.hidden = !puedeCrear;
+  reiniciar.hidden = !puedeCrear;
+  aviso.hidden = !puedeCrear;
+  restringirOrganizacion();
+
+  tematica.addEventListener("change", aplicar);
+  document.getElementById("filtros").addEventListener("submit", (evento) => evento.preventDefault());
+
+  nueva.addEventListener("click", () => {
+    avisar(errorDialogo, "");
+    dialogo.showModal();
+  });
+  document.getElementById("cancelar").addEventListener("click", () => dialogo.close());
+
+  formulario.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    if (!puede(sesion, "noticias", "crear")) return;
+    if (!formulario.reportValidity()) return;
+    const datos = new FormData(formulario);
+    const noticia = {
+      titulo: String(datos.get("titulo")),
+      fecha: String(datos.get("fecha")),
+      tematica: String(datos.get("tematica")),
+      organizacion: String(datos.get("organizacion")),
+      resumen: String(datos.get("resumen") || ""),
+      cuerpo: String(datos.get("cuerpo") || ""),
+      enlace: String(datos.get("enlace") || ""),
+    };
+    guardar.disabled = true;
+    try {
+      await crearNoticia(noticia);
+      dialogo.close();
+      formulario.reset();
+      restringirOrganizacion();
+      await refrescar();
+    } catch (fallo) {
+      avisar(errorDialogo, fallo.message);
+    } finally {
+      guardar.disabled = false;
+    }
+  });
+
+  lista.addEventListener("click", async (clic) => {
+    const boton = clic.target.closest("[data-borrar]");
+    if (!boton) return;
+    const nodo = boton.closest(".noticia");
+    if (!puede(sesion, "noticias", "borrar", nodo.dataset.organizacion)) return;
+    const titulo = nodo.querySelector(".noticia__titulo").textContent;
+    if (!window.confirm(`¿Borrar la noticia "${titulo}"?`)) return;
+    try {
+      await borrarNoticia(nodo.dataset.id);
+      await refrescar();
+    } catch (fallo) {
+      avisar(error, fallo.message);
+    }
+  });
+
+  reiniciar.addEventListener("click", async () => {
+    if (!puede(sesion, "noticias", "crear")) return;
+    if (!window.confirm("¿Restaurar las noticias de ejemplo y descartar lo publicado aquí?")) return;
+    try {
+      pintar(await reiniciarNoticias());
+      avisar(error, "");
+    } catch (fallo) {
+      avisar(error, fallo.message);
+    }
+  });
+
+  refrescar();
+</script>
+
+<style>
+  .encabezado {
+    background: var(--lila);
+    border-bottom: var(--linea);
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .encabezado h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    margin-bottom: 1rem;
+  }
+
+  .barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .barra__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .barra__acciones .boton {
+    cursor: pointer;
+  }
+
+  .barra__acciones .boton[hidden] {
+    display: none;
+  }
+
+  .filtro select {
+    font: inherit;
+    font-weight: 500;
+    padding: 0.7rem 2.2rem 0.7rem 0.85rem;
+    border: var(--linea);
+    background-color: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--tinta) 50%),
+      linear-gradient(135deg, var(--tinta) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 12px) 52%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .aviso {
+    border: 1.5px solid var(--tinta);
+    background: var(--amarillo);
+    padding: 0.7rem 0.95rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: -1.25rem 0 2.5rem;
+  }
+
+  .aviso[hidden] {
+    display: none;
+  }
+
+  .error {
+    margin: 0 0 1.5rem;
+    font-weight: 700;
+    border: 1.5px solid var(--tinta);
+    background: var(--naranja);
+    color: var(--papel);
+    padding: 0.55rem 0.8rem;
+  }
+
+  .error[hidden] {
+    display: none;
+  }
+
+  .cargando {
+    font-weight: 600;
+  }
+
+  .cargando[hidden] {
+    display: none;
+  }
+
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .noticia {
+    position: relative;
+    border: var(--linea);
+    border-left: 10px solid var(--color, var(--lila-hondo));
+    box-shadow: var(--sombra-corta);
+    background: var(--papel);
+    padding: 1.6rem;
+  }
+
+  .noticia[hidden] {
+    display: none;
+  }
+
+  .noticia__tematica {
+    font-family: var(--display);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+  }
+
+  .noticia__titulo {
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    margin-bottom: 0.4rem;
+    padding-right: 2.6rem;
+  }
+
+  .noticia__meta {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--gris);
+  }
+
+  .noticia__resumen {
+    font-weight: 600;
+    max-width: 78ch;
+  }
+
+  .noticia__cuerpo {
+    max-width: 78ch;
+  }
+
+  .noticia__resumen[hidden],
+  .noticia__cuerpo[hidden] {
+    display: none;
+  }
+
+  .noticia__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.25rem 0 0;
+  }
+
+  .noticia__pie[hidden] {
+    display: none;
+  }
+
+  .noticia__enlace {
+    font-size: 0.78rem;
+    padding: 0.6rem 1.1rem;
+  }
+
+  .noticia__enlace[hidden] {
+    display: none;
+  }
+
+  .noticia__ejemplo {
+    font-family: var(--display);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1.5px solid var(--tinta);
+    background: var(--amarillo);
+    padding: 0.25rem 0.55rem;
+  }
+
+  .noticia__ejemplo[hidden] {
+    display: none;
+  }
+
+  .noticia__borrar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    border: 1.5px solid var(--tinta);
+    background: var(--papel);
+    color: var(--tinta);
+    padding: 0;
+  }
+
+  .noticia__borrar:hover {
+    background: var(--naranja);
+    color: var(--papel);
+  }
+
+  .noticia__borrar[hidden] {
+    display: none;
+  }
+
+  .vacio {
+    margin-top: 1.5rem;
+    font-weight: 600;
+  }
+
+  .dialogo {
+    width: min(100% - 2rem, 38rem);
+    border: var(--linea);
+    box-shadow: var(--sombra);
+    background: var(--papel);
+    color: var(--tinta);
+    padding: 0;
+  }
+
+  .dialogo::backdrop {
+    background: rgba(12, 12, 14, 0.55);
+  }
+
+  .formulario {
+    display: grid;
+    gap: 1rem;
+    padding: 1.75rem;
+  }
+
+  .formulario h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .campo {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .campo__rotulo {
+    font-family: var(--display);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .campo__par {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .formulario input,
+  .formulario select,
+  .formulario textarea {
+    font: inherit;
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: var(--linea);
+    background: var(--papel);
+    color: inherit;
+    border-radius: 0;
+    resize: vertical;
+  }
+
+  .formulario__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding-top: 1.1rem;
+    border-top: var(--linea);
+  }
+
+  .formulario__acciones .boton {
+    cursor: pointer;
+  }
+
+  @media (max-width: 560px) {
+    .campo__par {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
